@@ -1,10 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './fonts/fonts.css';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import AppRoutes from './routes';
-// import { Header } from './components/Header';
+import './css/index.css';
+import AppRoutes from './components/routes';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -12,9 +10,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    {/* <Header /> */}
     <AppRoutes />
   </React.StrictMode>
 );
-
-reportWebVitals();

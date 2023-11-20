@@ -7,7 +7,7 @@ interface PDTextProps extends React.HTMLProps<HTMLDivElement> {
 }
 
 
-export const Text: React.FC<PDTextProps> = (props) => {
+export const SMText: React.FC<PDTextProps> = (props) => {
   const { type = 'default', color, style, children, ...restProps } = props;
 
   // Determine the preset style based on the type

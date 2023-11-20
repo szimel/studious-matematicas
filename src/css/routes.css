@@ -1,0 +1,15 @@
+
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem; 
+}
+
+.sidebar {
+  /* Styles specific to the sidebar */
+}
+
+.main-content {
+  /* Styles specific to the main content area */
+}
