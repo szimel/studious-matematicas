@@ -1,15 +1,30 @@
-
 .container {
+  display: flex;
   height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 1rem; 
 }
 
 .sidebar {
-  /* Styles specific to the sidebar */
+  width: 25%;
 }
 
 .main-content {
-  /* Styles specific to the main content area */
+  flex: 1; 
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 1000px) {
+  /* so header can be displayed */
+  .container {
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+  }
+  .sidebar {
+    display: none; 
+    width: 100%;
+  }
+
+  .main-content {
+    flex: 1;
+  }
 }

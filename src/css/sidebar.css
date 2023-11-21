@@ -1,13 +1,41 @@
 .sidebar {
-  flex: 1;
-  flex-direction: 'row';
-  align-items: 'center';
-  height: '100%';
-  border: '10px solid black';
+  width: 25%;
+  max-width: 225px;
+  flex-direction: row; 
+  align-items: center;
+  height: 100%; 
+  border-right: 1px solid #eee;
 }
 
 .sidebarBox {
-  width: '10%';
-  border: 'solid #eee';
-  border-radius: '5px';
+  border-top: 1px solid #eee; 
+  border-bottom: 1px solid #eee; 
+}
+
+.sidebarBox :hover {
+  background-color: #eee;
+}
+
+/* Hide hamburger icon on larger screens */
+.hamburger {
+  display: none;
+}
+
+/* Hide sidebar and show hamburger icon on small screens */
+@media screen and (max-width: 1000px) {
+  .sidebar {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .hamburerBox {
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    height: 100%; 
+    border-right: 1px solid #eee;
+  }
 }
