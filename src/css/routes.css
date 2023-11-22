@@ -1,20 +1,22 @@
-.container {
+.routes-container {
   display: flex;
   height: 100vh;
+  flex-direction: row;
 }
 
 .sidebar {
   width: 25%;
 }
 
-.main-content {
+.routes-content {
   flex: 1; 
 }
 
 /* Responsive adjustments for smaller screens */
 @media screen and (max-width: 1000px) {
   /* so header can be displayed */
-  .container {
+  .routes-container {
+    display: flex;
     flex: 1;
     flex-direction: column;
     width: 100%;
@@ -24,7 +26,7 @@
     width: 100%;
   }
 
-  .main-content {
+  .routes-content {
     flex: 1;
   }
 }

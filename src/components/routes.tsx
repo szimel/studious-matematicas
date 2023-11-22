@@ -15,9 +15,9 @@ const AppRoutes: React.FC = () => {
 
   return (
     <Router>
-      <div className="container">
+      <div className="routes-container">
         <SideBar items={items}/>
-        <div className="main-content">
+        <div className="routes-content">
           <Routes>
             <Route path="/set-theory" element={<SetTheory />} />
             {/* ... other routes */}

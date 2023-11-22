@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface PDTextProps extends React.HTMLProps<HTMLDivElement> {
-  type?: 'default' | 'tooltip';
+  type?: 'default' | 'heading';
   color?: 'black' | 'white';
   style?: React.CSSProperties; 
 }
@@ -31,13 +31,13 @@ const textStyles = {
   default: {
     fontFamily: 'RobotoMono',
     fontWeight: 400,
-    lineHeight: '21px',
+    lineHeight: '150%',
     fontSize: '18px',
   },
-  tooltip: {
-    fontFamily: 'RobotoMono-Regular',
-    fontWeight: 400,
-    lineHeight: '21px',
-    fontSize: '14px',
+  heading: {
+    fontFamily: 'RobotoMono',
+    fontWeight: 500,
+    lineHeight: '150%',
+    fontSize: '30px',
   },
 };
