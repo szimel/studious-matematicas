@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { SMText } from './custom/Text';
 import { SideBarProps } from './Sidebar';
 import { useNavigate } from 'react-router-dom';
+import Tippy from '@tippyjs/react';
+import '../css/header.css';
 
 export const Header: React.FC<SideBarProps> = ({ items }) => {
   const navigate = useNavigate();
@@ -14,6 +16,34 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
   const handleClick = (link: string) => () => {
     navigate(link);
   };
+
+  const openWindow = () => {
+    window.open('https://github.com/szimel/studious-matematicas');
+  };
+
+  if (!items) {
+    return (
+      <div style={ styles.container }>
+        <SMText className='pi-animation' style={{ fontSize: 30 }}>π</SMText>
+        <Tippy animation='header-custom-animation'
+          content={
+            <div style={ styles.dropdown }>
+              <SMText>
+                Check out the source code!
+              </SMText>
+            </div>
+          }
+          interactive={true}
+          allowHTML={true}
+          delay={[0, 50]} 
+          placement="bottom" 
+          hideOnClick={true}
+        >
+          <img src='./icon-code.svg' alt="Code icon" height={30} width={30} onClick={openWindow}/>
+        </Tippy>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -39,11 +69,16 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
 const styles = {
   container: {
     display: 'flex',
-    flex: 1,
+    maxHeight: 60,
     padding: '10px 20px',
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#eee'
   },
+  dropdown: {
+    width: 200,
+    height: 'auto',
+    backgroundColor: '#eee',
+    borderRadius: 15,
+    padding: 15,
+  }
 } as const; 
