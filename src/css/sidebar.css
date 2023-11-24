@@ -18,6 +18,7 @@
 
 /* Only apply the transformation on hover */
 .sidebarBox:hover .sm-text {
+  cursor: pointer;
   transform: scale(1.2);
 }
 
