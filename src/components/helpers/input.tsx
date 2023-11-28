@@ -2,8 +2,9 @@ import Tippy from '@tippyjs/react';
 import React, { useState } from 'react';
 import { SMText } from '../custom/Text';
 import { ReactComponent as SendIcon } from '../../icon-send.svg';
-import { SolutionType, useVennDiagramHighlighter } from './useVennDiagramHighlighter';
+import { useVennDiagramHighlighter } from './useVennDiagramHighlighter';
 import { VennStateType } from '../screens/SetTheory';
+import 'tippy.js/animations/scale.css';
 
 
 interface InputProps {
@@ -58,38 +59,26 @@ export const Input: React.FC<InputProps> = ({ setVennData }) => {
     <>
       <SMText type='default' style={{ color: 'white', marginBottom: 10 }}>
           Use the{' '}
-        <Tippy delay={[0, 0]} content={
-          <div style={ styles.tooltip }>
-            <SMText>
-                Sets are collections of distinct objects, considered as an object in its own right.
-            </SMText>
-          </div>
+        <Tippy content={
+          <SMText>
+            Sets are collections of distinct objects, considered as an object in its own right.
+          </SMText>
         }>
-          <span style={{ fontWeight: '700', color: 'rgb(95, 106, 200)', cursor: 'pointer', }}>
+          <span id='sets'>
             Sets
           </span>
         </Tippy>
         {' A, B, and C to find the relation between '}
-        <Tippy delay={[0, 0]} content={
-          <div style={ styles.tooltip }>
-            <SMText>A union in set theory is all the unique elements from both sets</SMText>
-          </div>
+        <Tippy content={
+          <SMText>A union in set theory is all the unique elements from both sets</SMText>
         }>
-          <span style={{ fontWeight: '700', color: 'rgb(168, 109, 140)', cursor: 'pointer' }}>
-      Unions
-          </span>
+          <span id='union'>Unions</span>
         </Tippy>
         {' and '}
-        <Tippy delay={[0, 0]} content={
-          <div style={ styles.tooltip }>
-            <SMText>
-        An intersection in set theory is all the elements common to both sets
-            </SMText>
-          </div>
+        <Tippy content={
+          <SMText>An intersection in set theory is all the elements common to both sets</SMText>
         }>
-          <span style={{ fontWeight: 700, color: 'rgb(185, 117, 117)', cursor:'pointer' }}>
-      Intersections
-          </span>
+          <span id='intersection'>Intersections</span>
         </Tippy>
       </SMText>
 

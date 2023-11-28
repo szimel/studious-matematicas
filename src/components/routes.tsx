@@ -17,7 +17,7 @@ const AppRoutes: React.FC = () => {
   return (
     <div className="routes-container">
       <Router>
-        <Header />
+        <Header items={items} />
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <SideBar items={items}/>
           <div className="routes-content">

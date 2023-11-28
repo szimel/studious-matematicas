@@ -4,13 +4,14 @@
   height: 100vh;
   width: 100%; 
   background-color: black; 
-  padding-right: 60px;
 }
 
 /* Sidebar styling */
 .sidebar {
-  width: 20%; 
-  height: 100%; 
+  display: flex;
+  width: 20%;
+  min-width: 120px; 
+  height: 100%;
 }
 
 /* Content area styling */
@@ -18,9 +19,24 @@
   flex-grow: 1; 
   display: flex;
   flex-direction: column; 
+  padding-right: 60px;
 }
 
-/* Fixing overflow issues if sidebar or content has more height than 100vh
-.sidebar, .routes-content {
-  overflow-y: auto; /* Enables scrolling on overflow 
-} */
+@media screen and (max-width: 1000px) {
+  .sidebar{
+    display: none;
+  }
+
+  .routes-content {
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column; 
+    padding: 0 40px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .routes-content {
+    padding: 5px;
+  }
+}

@@ -2,7 +2,6 @@ import React from 'react';
 import '../css/sidebar.css';
 import { useNavigate } from 'react-router-dom';
 import { SMText } from './custom/Text';
-import { Header } from './Header';
 
 export interface SideBarItem {
   link: string;
@@ -34,11 +33,6 @@ export const SideBar: React.FC<SideBarProps> = ({ items }) => {
             </div>
           ))}
         </aside>
-      </div>
-      
-      {/* small breakpoints (<1000px) */}
-      <div className='hamburger'>
-        <Header items={items}/>
       </div>
     </>
   );

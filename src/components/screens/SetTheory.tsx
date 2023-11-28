@@ -3,6 +3,7 @@ import '../../css/set-theory.css';
 import { Input } from '../helpers/input';
 import { AnimateCircles } from '../helpers/VennDiagram';
 import { SolutionType } from '../helpers/useVennDiagramHighlighter';
+import tippy from 'tippy.js';
 
 export type VennStateType = {
   solution: SolutionType;
@@ -20,6 +21,12 @@ export const SetTheory: React.FC = () => {
     B_C: false,
     A_B_C: false,
   };
+
+  // tippy defualt for set theory popups
+  tippy.setDefaultProps({
+    animation: 'scale',
+    theme: 'tomato',
+  });
 
   const initialState: VennStateType = {
     solution: diagramStyles,

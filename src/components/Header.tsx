@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { SMText } from './custom/Text';
 import { SideBarProps } from './Sidebar';
 import { useNavigate } from 'react-router-dom';
-import Tippy from '@tippyjs/react';
+import Tippy, { tippy } from '@tippyjs/react';
 import '../css/header.css';
+import 'tippy.js/animations/scale.css';
 
 export const Header: React.FC<SideBarProps> = ({ items }) => {
   const navigate = useNavigate();
-  const [show, setShow] = useState(false);
 
-  const hanldeShow = () => {
-    setShow(!show);
-  };
+  // tippy content
+  tippy.setDefaultProps({
+    animation: 'scale',
+    theme: 'tomato',
+  });
 
   const handleClick = (link: string) => () => {
     navigate(link);
@@ -21,48 +23,40 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
     window.open('https://github.com/szimel/studious-matematicas');
   };
 
-  if (!items) {
-    return (
-      <div style={ styles.container }>
-        <SMText className='pi-animation' style={{ fontSize: 30 }}>π</SMText>
-        <Tippy animation='header-custom-animation'
+  if (!items) {return null;}
+
+  return (
+    <div style={ styles.container }>
+      <SMText className='pi-animation' style={{ fontSize: 30, cursor: 'default', }}>π</SMText>
+      <div style={{ flexDirection: 'row', display: 'flex' }}>
+        <Tippy
           content={
-            <div style={ styles.dropdown }>
-              <SMText>
-                Check out the source code!
-              </SMText>
+            <SMText>Check out the source code!</SMText>
+          }
+          hideOnClick={true}
+        >
+          <img src='./icon-code.svg' alt="Code icon" height={30} width={30} onClick={openWindow} 
+            style={{ cursor: 'pointer' }}/>
+        </Tippy>
+        <Tippy 
+          content={ 
+            <div >
+              {items.map((item, index) => (
+                <div className='sidebarBox' key={ index } onClick={handleClick(item.link)}>
+                  <SMText type='default' className='headerText'>
+                    {item.text}
+                  </SMText>
+                </div>
+              ))}
             </div>
           }
           interactive={true}
           allowHTML={true}
-          delay={[0, 50]} 
-          placement="bottom" 
-          hideOnClick={true}
         >
-          <img src='./icon-code.svg' alt="Code icon" height={30} width={30} onClick={openWindow}/>
+          <img src='/icon-hamburger.svg' className='hamburgerIcon'/>
         </Tippy>
       </div>
-    );
-  }
-
-  return (
-    <>
-      <div style={ styles.container }>
-        <img src='/icon-hamburger.svg' alt='hamburber' width={ 30 } onClick={hanldeShow}/>
-        <SMText style={{ fontSize: 30 }}>π</SMText>
-      </div>
-      { show && (
-        <div style={{ maxWidth: 200 }}>
-          {items.map((item, index) => (
-            <div className='sidebarBox' key={ index } onClick={handleClick(item.link)}>
-              <SMText type='default' style={{ lineHeight: '200%', paddingLeft: 10 }}>
-                {item.text}
-              </SMText>
-            </div>
-          ))}
-        </div>
-      )}
-    </>
+    </div>
   );
 };
 

@@ -23,3 +23,35 @@
 .pi-animation {
   animation: rainbow-text 3s linear infinite;
 }
+
+.hamburgerIcon {
+  display: none;
+}
+
+.dropdown {
+  width: auto;
+  height: 'auto';
+  padding: 20px;
+  background-color: #eee;
+  border-radius: 15px;
+}
+
+.headerText {
+  line-height: 200%;
+  padding: 5px 15px;
+  color: black;
+  cursor: pointer;
+}
+
+/* Only apply the transformation on hover */
+.sidebarBox:hover .headerText{
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 1000px) {
+  .hamburgerIcon {
+    display: block;
+    margin-left: 20px;
+  }
+}
