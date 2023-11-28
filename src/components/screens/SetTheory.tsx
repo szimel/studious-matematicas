@@ -1,30 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../../css/set-theory.css';
 import { Input } from '../helpers/input';
 import { AnimateCircles } from '../helpers/VennDiagram';
+import { SolutionType } from '../helpers/useVennDiagramHighlighter';
 
-
+export type VennStateType = {
+  solution: SolutionType;
+  inputValue: string;
+};
 
 export const SetTheory: React.FC = () => {
-
-  //dummy data
-  const diagramStyles = {
-    A: { animate: false, },
-    B: { animate: false, },
-    C: { animate: false, },
-    A_B: { animate: false, },
-    A_C: { animate: false, },
-    B_C: { animate: false, },
-    A_B_C: { animate: true, }, 
+  //on load data
+  const diagramStyles: SolutionType = {
+    A: false,
+    B: false,
+    C: false,
+    A_B: false,
+    A_C: false,
+    B_C: false,
+    A_B_C: false,
   };
+
+  const initialState: VennStateType = {
+    solution: diagramStyles,
+    inputValue: '', // Initialize with an empty string or some default value
+  };
+
+  const [vennData, setVennData] = useState<VennStateType>(initialState);
 
   return (
     <div className='st-container'>
       <div className='st-box'>
-        <AnimateCircles styles={diagramStyles}/>
+        <AnimateCircles {...vennData}/>
       </div>
       <div className='STBottomContainer'>
-        <Input />
+        <Input setVennData={setVennData}/>
       </div>
     </div>
   );
