@@ -1,19 +1,25 @@
 .sidebar {
-  width: 25%;
+  width: 20%;
+  /* padding-top: 15px; */
+  padding: 0 10px;
   max-width: 225px;
+  display: flex;
   flex-direction: row; 
-  align-items: center;
-  height: 100%; 
-  border-right: 1px solid #eee;
+  align-items: flex-start;
 }
 
-.sidebarBox {
-  border-top: 1px solid #eee; 
-  border-bottom: 1px solid #eee; 
+.sm-text {
+  transition: transform 0.3s ease; 
+  transform-origin: left;
+  line-height: 200%;
+  padding-left: 10px;
+  color: white;
 }
 
-.sidebarBox :hover {
-  background-color: #eee;
+/* Only apply the transformation on hover */
+.sidebarBox:hover .sm-text {
+  cursor: pointer;
+  transform: scale(1.2);
 }
 
 /* Hide hamburger icon on larger screens */
@@ -36,6 +42,5 @@
     flex-direction: column;
     align-items: center;
     height: 100%; 
-    border-right: 1px solid #eee;
   }
 }

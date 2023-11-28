@@ -1,0 +1,94 @@
+#setInput {
+  height: 50px;
+  flex-grow: 1;
+  border-radius: 25px;
+  border: 1px solid white;
+  background-color: black;
+  padding-left: 15px;
+  font-family: 'RobotoMono', sans-serif;
+  font-size: 16px; 
+  color: white;
+}
+
+#setInput::placeholder {
+  color: rgba(255, 255, 255, 0.868); 
+  font-family: 'RobotoMono', sans-serif; 
+  font-size: 16px; 
+  opacity: 1;
+} 
+
+.st-container {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  height: 100%;
+  border-radius: 15px;
+  background-color: rgb(33, 34, 37);
+  flex-grow: 1;
+  flex: 1;
+  padding: 40px;
+  gap: 40px;
+  max-width: 100%;
+}
+
+.st-box {
+  flex-grow: 1;
+  border-radius: 15px;
+  max-height: 100%;
+}
+
+.inputContainer {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-height: 50px;
+  box-sizing: border-box;
+}
+
+.STBottomContainer {
+  flex-direction: column;
+}
+
+.VDContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#svg svg{
+  width: auto;
+}
+
+#sets {
+  color: rgb(95, 106, 200);
+  font-weight: 700;
+  cursor: pointer;
+}
+ #union {
+  color: rgb(168, 109, 140);
+  font-weight: 700;
+  cursor: pointer;
+ }
+ #intersection {
+  color: rgb(185, 117, 117);
+  font-weight: 700;
+  cursor: pointer;
+ }
+
+.tippy-box[data-theme~='tomato'] {
+  background-color: #eee;
+  padding: 15px;
+  border-radius: 15px;
+  color: black;
+  font-size: 16px;
+  font-family: 'RobotoMono';
+}
+
+@media screen and (max-width: 450px) {
+  .st-container {
+    padding: 10px;
+  }
+}
