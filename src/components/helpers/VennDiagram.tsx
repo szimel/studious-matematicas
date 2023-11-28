@@ -42,6 +42,7 @@ export const AnimateCircles: React.FC<VennStateType> = (props) => {
         .height(height);
       d3.select(vennRef.current)
         .datum(sets)
+        // eslint-disable-next-line
         .call(chart as any);
       // Apply the initial static styles
       d3.select(vennRef.current).selectAll('path')
@@ -73,6 +74,7 @@ export const AnimateCircles: React.FC<VennStateType> = (props) => {
         .transition() 
         .duration(1500) 
         .ease(d3.easeLinear) 
+        // eslint-disable-next-line
         .style('fill', function(d: any) {
           const setIdentifier = d.sets.sort().join('_');
           if (solution[setIdentifier] === true) {

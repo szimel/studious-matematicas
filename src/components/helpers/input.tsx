@@ -96,13 +96,3 @@ export const Input: React.FC<InputProps> = ({ setVennData }) => {
     </>
   );
 };
-
-const styles = {
-  tooltip: {
-    width: 200,
-    height: 'auto',
-    backgroundColor: '#eee',
-    borderRadius: 15,
-    padding: 15,
-  }
-};

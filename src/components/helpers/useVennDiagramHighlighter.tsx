@@ -95,7 +95,7 @@ function createSteps(expression: string) {
 }
 
 // Helper function to find the matching closing parenthesis
-function findClosingParenthesis(str: string, start: any) {
+function findClosingParenthesis(str: string, start: number) {
   let depth = 0;
   for (let i = start; i < str.length; i++) {
     if (str[i] === '(') {depth++;}
@@ -111,7 +111,6 @@ function findClosingParenthesis(str: string, start: any) {
 export const useVennDiagramHighlighter = (expression: string) => {
   function evaluateExpression(expression: string) {
     const steps = createSteps(expression);
-    console.log(steps);
   
     const solution: SolutionType = {
       A: false,
@@ -190,6 +189,5 @@ export const useVennDiagramHighlighter = (expression: string) => {
 
   const diagramStyles = evaluateExpression(expression);
 
-  // console.log(diagramStyles);
   return diagramStyles;
 };

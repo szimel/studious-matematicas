@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SMText } from './custom/Text';
 import { SideBarProps } from './Sidebar';
 import { useNavigate } from 'react-router-dom';
