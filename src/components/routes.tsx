@@ -1,6 +1,6 @@
 import React from 'react';
 import '../css/routes.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { SideBar, SideBarItem } from './Sidebar';
 import { SetTheory } from './screens/SetTheory';
 import { Header } from './Header';
@@ -22,6 +22,7 @@ const AppRoutes: React.FC = () => {
           <SideBar items={items}/>
           <div className="routes-content">
             <Routes>
+              <Route path="/" element={<Navigate to="/set-theory" replace />} />
               <Route path="/set-theory" element={<SetTheory />} />
             </Routes>
           </div>
