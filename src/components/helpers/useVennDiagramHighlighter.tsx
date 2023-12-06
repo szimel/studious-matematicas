@@ -194,7 +194,6 @@ function evaluateNode(node: ASTNode, universalSet: UniversalSet): SetObject {
   switch (node.type) {
   case 'SET':
     if (node.value === null || !universalSet[node.value]) {
-      console.log(node);
       throw new Error('Set node with null value or set not found in universal set');
     }
     return universalSet[node.value]; // This returns a SetObject
@@ -256,9 +255,7 @@ function complement(set: SetObject): SetObject {
 
 export const useVennDiagramHighlighter = (expression: string) => {
   const tokens = tokenize(expression); // Tokenize the input
-  console.log(tokens);
   const ast = parse(tokens); // Parse the tokens into an AST
-  console.log(ast);
   const setObject: SetObject = evaluateNode(ast, universalSet); // Evaluate the AST into a SetObject
 
   // Convert the SetObject into a SolutionType object for the venn diagram
