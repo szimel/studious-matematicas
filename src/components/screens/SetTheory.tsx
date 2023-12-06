@@ -13,16 +13,16 @@ export type VennStateType = {
 export const SetTheory: React.FC = () => {
   //on load data
   const diagramStyles: SolutionType = {
-    A: false,
-    B: false,
-    C: false,
-    A_B: false,
-    A_C: false,
-    B_C: false,
-    A_B_C: false,
+    setA: false,
+    setB: false,
+    setC: false,
+    setAUnionB: false,
+    setAUnionC: false,
+    setBUnionC: false,
+    setAUnionBUnionC: false,
   };
 
-  // tippy defualt for set theory popups
+  // tippy default for set theory popups
   tippy.setDefaultProps({
     animation: 'scale',
     theme: 'tomato',
