@@ -18,7 +18,7 @@ export const Input: React.FC<InputProps> = ({ setVennData }) => {
   const grey = 'rgb(151, 184, 248)';
 
   const validateInput = (value: string) => {
-    const regex = /^[ABCUI() ∩∪ ']*$/; // Allow A, B, C, U, I, parentheses
+    const regex = /^[ABCUI() ∩∪ '’]*$/; // Allow A, B, C, U, I, parentheses, typographic apostrophes
     let capsValue = value.toUpperCase();
   
     // If the value doesn't match the regex, remove the last character
@@ -28,6 +28,8 @@ export const Input: React.FC<InputProps> = ({ setVennData }) => {
       value = value.slice(0, -1) + '∩';
     } else if (capsValue.slice(-1) === 'U') { // use union symbol
       value = value.slice(0, -1) + '∪';
+    } else if (capsValue.slice(-1) === '’') { // use typographic apostrophe
+      value = value.slice(0, -1) + '\'';
     }
   
     capsValue = value.toUpperCase();
