@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useState, createContext } from 'react';
 import { VennStateType } from './screens/SetTheory';

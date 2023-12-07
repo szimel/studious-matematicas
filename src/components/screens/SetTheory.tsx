@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../../css/set-theory.css';
 import { Input } from '../helpers/set-theory/input';
 import { AnimateCircles } from '../helpers/set-theory/VennDiagram';
 import { 
-  SolutionType, useVennDiagramHighlighter 
-} from '../helpers/set-theory/useVennDiagramHighlighter';
+  SolutionType } from '../helpers/set-theory/useVennDiagramHighlighter';
 import tippy from 'tippy.js';
-import { SMText } from '../custom/Text';
 import { useNavigate } from 'react-router-dom';
 import BouncyText from '../custom/BouncyText';
 

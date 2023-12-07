@@ -2,7 +2,6 @@ import Tippy from '@tippyjs/react';
 import React, { useState } from 'react';
 import { SMText } from '../../custom/Text';
 import { ReactComponent as SendIcon } from '../../../icon-send.svg';
-import { useVennDiagramHighlighter } from './useVennDiagramHighlighter';
 import 'tippy.js/animations/scale.css';
 import { AppContext } from '../../Context';
 
@@ -38,7 +37,6 @@ export const Input: React.FC = () => {
   };
 
   function handleSubmit() {
-    const solution = useVennDiagramHighlighter(inputValue);
     setColor(blue);
     updateVennData( inputValue);
     setInputValue('');
