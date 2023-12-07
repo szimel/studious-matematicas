@@ -1,193 +1,273 @@
+/* eslint-disable no-debugger */
+type TokenType = 'SET' | 'UNION' | 'INTERSECTION' | 'COMPLEMENT' | 'OPEN_PAREN' | 'CLOSE_PAREN';
+
+interface Token {
+  type: TokenType;
+  value: string;
+}
+
+type ASTNodeType = 'UNION' | 'INTERSECTION' | 'COMPLEMENT' | 'SET';
+
+interface ASTNode {
+  type: ASTNodeType;
+  value: string | null; // Value is null for operations
+  left: ASTNode | null;
+  right: ASTNode | null;
+}
+
+interface UniversalSet {
+  [key: string]: SetObject;
+}
+
 export type SolutionType = {
   [key: string]: boolean;
-  A: boolean;
-  B: boolean;
-  C: boolean;
-  A_B: boolean;
-  A_C: boolean;
-  B_C: boolean;
-  A_B_C: boolean;
+  setA: boolean;
+  setB: boolean;
+  setC: boolean;
+  setAUnionB: boolean;
+  setAUnionC: boolean;
+  setBUnionC: boolean;
+  setAUnionBUnionC: boolean;
 };
 
-type SetObject = {
+interface SetObject {
   [key: string]: boolean;
-};
-
-type UniversalSet = {
-  [key: string]: SetObject;
-};
+}
 
 const universalSet: UniversalSet = {
-  A: {
-    A: true,
-    B: false,
-    C: false,
-    A_B: true,
-    A_C: true,
-    B_C: false,
-    A_B_C: true,
+  setA: {
+    setA: true,
+    setB: false,
+    setC: false,
+    setAUnionB: true,
+    setAUnionC: true,
+    setBUnionC: false,
+    setAUnionBUnionC: true,
   },
-  B: {
-    A: false,
-    B: true,
-    C: false,
-    A_B: true,
-    A_C: false,
-    B_C: true,
-    A_B_C: true,
+  setB: {
+    setA: false,
+    setB: true,
+    setC: false,
+    setAUnionB: true,
+    setAUnionC: false,
+    setBUnionC: true,
+    setAUnionBUnionC: true,
   },
-  C: {
-    A: false,
-    B: false,
-    C: true,
-    A_B: false,
-    A_C: true,
-    B_C: true,
-    A_B_C: true,
+  setC: {
+    setA: false,
+    setB: false,
+    setC: true,
+    setAUnionB: false,
+    setAUnionC: true,
+    setBUnionC: true,
+    setAUnionBUnionC: true,
   },
 };
 
-interface Step {
-  set: string;
-  type: '∪' | '∩' | '';
+function tokenize(input: string): Token[] {
+  const tokens: Token[] = [];
+
+  for (let i = 0; i < input.length; i++) {
+    const char = input[i];
+
+    switch (char) {
+    case '∪':
+      tokens.push({ type: 'UNION', value: char });
+      break;
+    case '∩':
+      tokens.push({ type: 'INTERSECTION', value: char });
+      break;
+    case '\'':
+      tokens.push({ type: 'COMPLEMENT', value: char });
+      break;
+    case '(':
+      tokens.push({ type: 'OPEN_PAREN', value: char });
+      break;
+    case ')':
+      tokens.push({ type: 'CLOSE_PAREN', value: char });
+      break;
+    default:
+      if (char.match(/[ABC]/)) {
+        tokens.push({ type: 'SET', value: `set${char}` });
+      }
+    }
+  }
+
+  return tokens;
 }
 
-function createSteps(expression: string) {
-  const steps: Step[] = [];
-  let currentSet = '';
-  let currentType: Step['type'] = '';
 
-  // A function to add a step if there's an ongoing operation
-  const addStepIfNeeded = () => {
-    if (currentSet && currentType) {
-      steps.push({ set: currentSet, type: currentType });
-      currentSet = '';
-      currentType = '';
+// works by using a recursive descent parser - meaning it parses the tokens using a 
+// function loop that calls itself recursively, union => intersection => complement => primary
+function parse(tokens: Token[]): ASTNode {
+  let currentTokenIndex = 0;
+
+  function getNextToken(): Token | null {
+    return currentTokenIndex < tokens.length ? tokens[currentTokenIndex++] : null;
+  }
+
+  function parseExpression(): ASTNode {
+    return parseUnion();
+  }
+
+  function parseUnion(): ASTNode {
+    let node = parseIntersection();
+  
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const token = getNextToken();
+      if (!token || token.type !== 'UNION') {
+        currentTokenIndex--;
+        break;
+      }
+
+      const right = parseIntersection();
+      node = { type: 'UNION', value: null, left: node, right: right };
     }
+  
+    return node;
+  }
+
+  function parseIntersection(): ASTNode {
+    let node = parseComplement();
+  
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const token = getNextToken();
+      if (!token || token.type !== 'INTERSECTION') {
+        currentTokenIndex--;
+        break;
+      }
+
+      const right = parseComplement();
+      node = { type: 'INTERSECTION', value: null, left: node, right: right };
+    }
+  
+    return node;
+  }
+
+  function parseComplement(): ASTNode {
+    let node = parsePrimary();
+    
+    // Check if next token is a complement
+    const nextToken = getNextToken();
+    if (nextToken && nextToken.type === 'COMPLEMENT') {
+      node = { type: 'COMPLEMENT', value: null, left: node, right: null };
+      // Do not immediately expect another primary expression here
+    } else {
+      currentTokenIndex--; // If not a complement, put back the token
+    }
+    
+    return node;
+  }
+  
+
+  function parsePrimary(): ASTNode {
+    const token = getNextToken();
+    if (!token) {
+      alert('Unexpected end of input!');
+      throw new Error('Unexpected end of input');
+    }
+  
+    if (token.type === 'OPEN_PAREN') {
+      const node = parseExpression();
+      const closingToken = getNextToken();
+      if (!closingToken || closingToken.type !== 'CLOSE_PAREN') {
+        alert('Expected closing parenthesis!');
+        throw new Error('Expected closing parenthesis');
+      }
+      return node;
+    }
+  
+    if (token.type === 'SET') {
+      return { type: 'SET', value: token.value, left: null, right: null };
+    }
+  
+    throw new Error('Unexpected token: ' + token.type);
+  }
+  
+  return parseExpression();
+}
+
+
+function evaluateNode(node: ASTNode, universalSet: UniversalSet): SetObject {
+  switch (node.type) {
+  case 'SET':
+    if (node.value === null || !universalSet[node.value]) {
+      throw new Error('Set node with null value or set not found in universal set');
+    }
+    return universalSet[node.value]; // This returns a SetObject
+
+  case 'UNION':
+  case 'INTERSECTION': {
+    if (node.left === null || node.right === null) {
+      throw new Error(`${node.type} node with null child`);
+    }
+    const set1 = evaluateNode(node.left, universalSet);
+    const set2 = evaluateNode(node.right, universalSet);
+    return node.type === 'UNION' ? union(set1, set2) : intersection(set1, set2);
+  }
+
+  case 'COMPLEMENT': {
+    if (node.left === null) {
+      throw new Error('Complement node with null child');
+    }
+    return complement(evaluateNode(node.left, universalSet));
+  }
+
+  default:
+    throw new Error('Unknown AST node type');
+  }
+}
+
+// Returns the union of two sets
+function union(set1: SetObject, set2: SetObject): SetObject {
+  const result: SetObject = {};
+
+  Object.keys(set1).forEach(key => {
+    result[key] = set1[key] || set2[key];
+  });
+
+  return result;
+}
+
+// Returns the intersection of two sets
+function intersection(set1: SetObject, set2: SetObject): SetObject {
+  const result: SetObject = {};
+
+  Object.keys(set1).forEach(key => {
+    result[key] = set1[key] && set2[key];
+  });
+
+  return result;
+}
+
+// Returns the complement of a set
+function complement(set: SetObject): SetObject {
+  const result: SetObject = {};
+
+  Object.keys(set).forEach(key => {
+    result[key] = !set[key]; // Invert the boolean value for each key
+  });
+
+  return result;
+}
+
+export const useVennDiagramHighlighter = (expression: string) => {
+  const tokens = tokenize(expression); // Tokenize the input
+  const ast = parse(tokens); // Parse the tokens into an AST
+  const setObject: SetObject = evaluateNode(ast, universalSet); // Evaluate the AST into a SetObject
+
+  // Convert the SetObject into a SolutionType object for the venn diagram
+  const solution: SolutionType = {
+    setA: setObject['setA'] || false,
+    setB: setObject['setB'] || false,
+    setC: setObject['setC'] || false,
+    setAUnionB: setObject['setAUnionB'] || false,
+    setAUnionC: setObject['setAUnionC'] || false,
+    setBUnionC: setObject['setBUnionC'] || false,
+    setAUnionBUnionC: setObject['setAUnionBUnionC'] || false,
   };
 
-  for (let i = 0; i < expression.length; i++) {
-    const char = expression[i];
-
-    if (char === '∪' || char === '∩') {
-      // If an operator is found, add the step and start a new one
-      addStepIfNeeded();
-      currentType = char;
-    } else if (char === '(') {
-      const end = findClosingParenthesis(expression, i);
-      if (end === -1) {
-        throw alert('Check your parenthesis!');
-      } else {
-        const subExpression = expression.slice(i + 1, end);
-        steps.push(...createSteps(subExpression));
-        i = end;
-      }
-    } else if (char.match(/[ABC]/)) {
-      // Accumulate set characters
-      currentSet += char;
-    }
-  }
-
-  // Add the last step if needed
-  addStepIfNeeded();
-
-  return steps;
-}
-
-// Helper function to find the matching closing parenthesis
-function findClosingParenthesis(str: string, start: number) {
-  let depth = 0;
-  for (let i = start; i < str.length; i++) {
-    if (str[i] === '(') {depth++;}
-    if (str[i] === ')') {
-      depth--;
-      if (depth === 0) {return i;}
-    }
-  }
-  return -1; // Not found or malformed expression
-}
-
-//HOOK being called
-export const useVennDiagramHighlighter = (expression: string) => {
-  function evaluateExpression(expression: string) {
-    const steps = createSteps(expression);
-  
-    const solution: SolutionType = {
-      A: false,
-      B: false,
-      C: false,
-      A_B: false,
-      A_C: false,
-      B_C: false,
-      A_B_C: false,
-    };
-
-    // map out steps
-    steps.forEach(step => {
-      const type = step.type; 
-      if (step === steps[0]) {
-        // initial sets to compare
-        const setOne = universalSet[step.set[0]];
-        const setTwo = universalSet[step.set[1]];
-
-        // union logic
-        if (type === '∪') {
-          // Merge keys from setOne
-          Object.keys(setOne).forEach(key => {
-            if (setOne[key] === true) {solution[key] = true;}
-          });
-          // Merge keys from setTwo
-          Object.keys(setTwo).forEach(key => {
-            if (setTwo[key] === true) {solution[key] = true;}
-          });
-
-        // intersection logic
-        } else {
-          if (type === '∩') {
-            Object.keys(setOne).forEach(key => {
-              if (setOne[key] === true && setTwo[key] === true) {
-                // If the key is true in both sets, include it in the solution
-                solution[key] = true;
-              } else {
-                // If the key is not true in both sets, ensure it's false in the solution
-                solution[key] = false; 
-              }
-            });
-          }
-        } 
-
-      // for every step after the first one
-      } else {
-        const valueOne = step.set[0];
-        const setOne = universalSet[valueOne];
-
-        if (type === '∪') {
-          // Merge keys from setOne
-          Object.keys(setOne).forEach(key => {
-            if (setOne[key] === true) {solution[key] = true;}
-          });
-
-        // intersection logic
-        } else {
-          if (type === '∩') {
-            Object.keys(setOne).forEach(key => {
-              if (setOne[key] === true && solution[key] === true) {
-                // If the key is true in both sets, include it in the solution
-                solution[key] = true;
-              } else {
-                // If the key is not true in both sets, ensure it's false in the solution
-                solution[key] = false;
-              }
-            });
-          }
-        } 
-      }
-    });
-    return solution;
-  
-  } 
-
-  const diagramStyles = evaluateExpression(expression);
-
-  return diagramStyles;
+  return solution;
 };

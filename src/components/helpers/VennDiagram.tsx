@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { VennDiagram } from '@upsetjs/venn.js';
@@ -70,16 +71,19 @@ export const AnimateCircles: React.FC<VennStateType> = (props) => {
   // animates the sections
   useEffect(() => {
     if (vennRef.current) {
+      // Inside the useEffect for animating sections
       d3.select(vennRef.current).selectAll('path')
-        .transition() 
-        .duration(1500) 
-        .ease(d3.easeLinear) 
-        // eslint-disable-next-line
+        .transition()
+        .duration(1500)
+        .ease(d3.easeLinear)
         .style('fill', function(d: any) {
-          const setIdentifier = d.sets.sort().join('_');
+          // Adjust the setIdentifier to match the set names within solution
+          const setIdentifier = 'set' + d.sets.sort().join('Union');          
           if (solution[setIdentifier] === true) {
             return colors[colorIndex]; 
-          } else {return 'rgb(25, 26, 30)';} // Keep the existing color if not animating
+          } else {
+            return 'rgb(25, 26, 30)'; // Default color
+          }
         });
     }
     const intervalId = setInterval(() => {
