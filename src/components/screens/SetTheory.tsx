@@ -17,26 +17,16 @@ export type VennStateType = {
 
 export const SetTheory: React.FC = () => {
   const navigate = useNavigate();
-
-  const handleTutorialClick = () => {
-    navigate('/tutorial');
-  };
-
-  //empty venn diagram data
-  const diagramStyles = useVennDiagramHighlighter('(A ∪ B ∪ C)\'');
-
+  
   // tippy default for set theory popups
   tippy.setDefaultProps({
     animation: 'scale',
     theme: 'tomato',
   });
 
-  const initialState: VennStateType = {
-    solution: diagramStyles,
-    inputValue: '', // Initialize with an empty string or some default value
+  const handleTutorialClick = () => {
+    navigate('/tutorial');
   };
-
-  const [vennData, setVennData] = useState<VennStateType>(initialState);
 
   return (
     <div className='st-container'>
@@ -44,10 +34,10 @@ export const SetTheory: React.FC = () => {
         <BouncyText onClick={handleTutorialClick}>
           <u>{'<-'}Tutorial</u>
         </BouncyText>
-        <AnimateCircles {...vennData}/>
+        <AnimateCircles />
       </div>
       <div className='STBottomContainer'>
-        <Input setVennData={setVennData}/>
+        <Input />
       </div>
     </div>
   );

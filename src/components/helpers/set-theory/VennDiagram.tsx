@@ -1,21 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { VennDiagram } from '@upsetjs/venn.js';
-import { VennStateType } from '../../screens/SetTheory';
 import { SMText } from '../../custom/Text';
-
-// const colors = [
-//   // '#310A31',
-//   '#847996',
-//   '#88B7B5',
-//   '#A7CAB1',
-//   '#F4ECD6',
-//   '#A7CAB1',
-//   '#88B7B5',
-//   '#847996',
-//   // '#310A31',
-// ];
+import { AppContext } from '../../Context';
 
 const colors = [
   '#eaac8b',
@@ -40,10 +28,13 @@ const sets = [
   { sets: ['A', 'B', 'C'], size: 1 },
 ];
 
-export const AnimateCircles: React.FC<VennStateType> = (props) => {
-  const { solution, inputValue } = props;
+export const AnimateCircles: React.FC = () => {
+  const { vennData } = useContext(AppContext);
   const vennRef = useRef(null);
   const [colorIndex, setColorIndex] = useState(0);
+
+  // Destructure the data from the context
+  const { solution, inputValue } = vennData;
 
   //dynamic sizing for venn diagram
   useEffect(() => {
@@ -82,6 +73,7 @@ export const AnimateCircles: React.FC<VennStateType> = (props) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
 
   // animates the sections
   useEffect(() => {

@@ -3,15 +3,13 @@ import React, { useState } from 'react';
 import { SMText } from '../../custom/Text';
 import { ReactComponent as SendIcon } from '../../../icon-send.svg';
 import { useVennDiagramHighlighter } from './useVennDiagramHighlighter';
-import { VennStateType } from '../../screens/SetTheory';
 import 'tippy.js/animations/scale.css';
+import { AppContext } from '../../Context';
 
 
-interface InputProps {
-  setVennData: React.Dispatch<React.SetStateAction<VennStateType>>;
-}
-
-export const Input: React.FC<InputProps> = ({ setVennData }) => {
+export const Input: React.FC = () => {
+  const { updateVennData } = React.useContext(AppContext);
+  const [firstLoad, setFirstLoad] = useState(true); // make tippy show on first load
   const [inputValue, setInputValue] = useState('');
   const [color, setColor] = useState('rgb(87, 88, 90)');
   const blue = 'rgb(87, 88, 90)';
@@ -42,11 +40,7 @@ export const Input: React.FC<InputProps> = ({ setVennData }) => {
   function handleSubmit() {
     const solution = useVennDiagramHighlighter(inputValue);
     setColor(blue);
-    setVennData(prevState => ({
-      ...prevState, // Spread the previous state to maintain any existing properties
-      solution: solution, 
-      inputValue: inputValue,
-    }));
+    updateVennData( inputValue);
     setInputValue('');
   }
 
@@ -56,7 +50,6 @@ export const Input: React.FC<InputProps> = ({ setVennData }) => {
     }
   };
   
-
   return (
     <>
       <SMText type='default' style={{ color: 'white', marginBottom: 10 }}>
@@ -89,14 +82,23 @@ export const Input: React.FC<InputProps> = ({ setVennData }) => {
       </SMText>
 
       <div className='inputContainer'>
-        <input 
-          type="text" 
-          id="setInput" 
-          placeholder="Enter a prompt here" 
-          onChange={(e) => validateInput(e.target.value)} 
-          value={inputValue}
-          onKeyDown={handleKeyDown}
-        />
+        <Tippy visible={firstLoad} onClickOutside={() => setFirstLoad(false)} content={
+          <SMText color='black'>
+            This input only accepts the characters A, B, C, U, I, parentheses, and apostrophes. 
+            <br/>
+            Type &apos;u&apos; for a union symbol and &apos;i&apos; for an intersection symbol
+          </SMText>
+        }>
+          <input 
+            type="text"
+            autoComplete="off"
+            id="setInput" 
+            placeholder="Enter a set relation" 
+            onChange={(e) => validateInput(e.target.value)} 
+            value={inputValue}
+            onKeyDown={handleKeyDown}
+          />
+        </Tippy>
         <SendIcon width={30} height={30} fill={color} onClick={handleSubmit}/>
       </div>
     </>
