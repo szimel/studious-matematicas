@@ -62,7 +62,7 @@ export const Input: React.FC<InputProps> = ({ setVennData }) => {
       <SMText type='default' style={{ color: 'white', marginBottom: 10 }}>
           Use the{' '}
         <Tippy content={
-          <SMText>
+          <SMText color='black'>
             Sets are collections of distinct objects, considered as an object in its own right.
           </SMText>
         }>
@@ -72,13 +72,17 @@ export const Input: React.FC<InputProps> = ({ setVennData }) => {
         </Tippy>
         {' A, B, and C to find the relation between '}
         <Tippy content={
-          <SMText>A union in set theory is all the unique elements from both sets</SMText>
+          <SMText color='black'>
+            A union in set theory is all the unique elements from both sets
+          </SMText>
         }>
           <span id='union'>Unions</span>
         </Tippy>
         {' and '}
         <Tippy content={
-          <SMText>An intersection in set theory is all the elements common to both sets</SMText>
+          <SMText color='black'>
+            An intersection in set theory is all the elements common to both sets
+          </SMText>
         }>
           <span id='intersection'>Intersections</span>
         </Tippy>

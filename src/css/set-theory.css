@@ -78,15 +78,6 @@
   cursor: pointer;
  }
 
-.tippy-box[data-theme~='tomato'] {
-  background-color: #eee;
-  padding: 15px;
-  border-radius: 15px;
-  color: black;
-  font-size: 16px;
-  font-family: 'RobotoMono';
-}
-
 @media screen and (max-width: 450px) {
   .st-container {
     padding: 10px;

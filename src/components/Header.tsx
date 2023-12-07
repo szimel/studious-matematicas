@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { SMText } from './custom/Text';
 import { SideBarProps } from './Sidebar';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import 'tippy.js/animations/scale.css';
 
 export const Header: React.FC<SideBarProps> = ({ items }) => {
   const navigate = useNavigate();
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // tippy content
   tippy.setDefaultProps({
@@ -25,17 +26,30 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
 
   if (!items) {return null;}
 
+  const handleVideoClick = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
+  };
+
   return (
     <div style={ styles.container }>
-      <SMText className='pi-animation' style={{ fontSize: 30, cursor: 'default', }}>π</SMText>
+      
+      {/* <SMText className='pi-animation' style={{ fontSize: 30, cursor: 'default', }}>π
+      </SMText> */}
+      {/* <img src='./pi.png' className='pi-animation' style={styles.headerImage}/> */}
+      <video ref={videoRef} autoPlay muted style={ styles.headerImage } onClick={handleVideoClick}>
+        <source src="./π.mp4" type="video/mp4"/>
+        Your browser does not support the video tag.
+      </video>
       <div style={{ flexDirection: 'row', display: 'flex' }}>
         <Tippy
           content={
-            <SMText>Check out the source code!</SMText>
+            <SMText color='black'>Check out the source code!</SMText>
           }
           hideOnClick={true}
         >
-          <img src='./icon-code.svg' alt="Code icon" height={30} width={30} onClick={openWindow} 
+          <img src='./icon-code.svg' alt="Code icon" height={40} width={40} onClick={openWindow} 
             style={{ cursor: 'pointer' }}/>
         </Tippy>
         <Tippy 
@@ -43,7 +57,7 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
             <div >
               {items.map((item, index) => (
                 <div className='sidebarBox' key={ index } onClick={handleClick(item.link)}>
-                  <SMText type='default' className='headerText'>
+                  <SMText color='black' type='default' className='headerText'>
                     {item.text}
                   </SMText>
                 </div>
@@ -74,5 +88,10 @@ const styles = {
     backgroundColor: '#eee',
     borderRadius: 15,
     padding: 15,
-  }
+  },
+  headerImage: {
+    height: 60,
+    width: 60,
+    marginRight: 10,
+  },
 } as const; 

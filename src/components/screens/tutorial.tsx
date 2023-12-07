@@ -1,12 +1,32 @@
-/* eslint-disable max-len */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../css/set-theory.css';
 import { SMText } from '../custom/Text';
 import { useNavigate } from 'react-router-dom';
 import BouncyText from '../custom/BouncyText';
+import { CircleItem } from '../custom/AnimatedCircle';
+import { AnimateCircles } from '../helpers/set-theory/VennDiagram';
+import { VennStateType } from './SetTheory';
+import { useVennDiagramHighlighter } from '../helpers/set-theory/useVennDiagramHighlighter';
+import Tippy from '@tippyjs/react';
 
 export const Tutorial: React.FC = () => {
   const navigate = useNavigate();
+  const [expandedItem, setExpandedItem] = useState('Union');
+  const [showFirstTooltip, setShowFirstTooltip] = useState(true);
+
+  //empty venn diagram data
+  const diagramStyles = useVennDiagramHighlighter('(A ∪ B ∪ C)\'');
+  const initialState: VennStateType = {
+    solution: diagramStyles,
+    inputValue: '', // Initialize with an empty string or some default value
+  };
+  const [vennData, setVennData] = useState<VennStateType>(initialState);
+
+  // set expandedItem to clicked div
+  const handleItemClick = (item: string) => {
+    setExpandedItem(item);
+  };
+
 
   const handleBackPressed = () => {
     navigate('/set-theory');
@@ -16,35 +36,76 @@ export const Tutorial: React.FC = () => {
     <div className='st-container'>
       <div className='st-box'>
         <BouncyText onClick={handleBackPressed}><u>{'<-'}Back</u></BouncyText>
-        <h1>Set Theory Tutorial</h1>
-      
-        <section>
-          <h2>Overview of Set Theory</h2>
-          <p>Set theory is a branch of mathematical logic that studies sets, which are collections of objects...</p>
-        </section>
-      
-        <section>
-          <h2>Unions</h2>
-          <p>
-            A union in set theory is a new set that contains all elements that are in at least one of two sets...
-          </p>
-        </section>
-      
-        <section>
-          <h2>Intersections</h2>
-          <p>An intersection in set theory is a new set that contains all elements that are in both sets...</p>
-        </section>
-      
-        <section>
-          <h2>Complements</h2>
-          <p>A complement in set theory is a set of all elements in the universal set that are not in a given set...</p>
-        </section>
-      
-        <section>
-          <h2>Using the Set Theory Page</h2>
-          <p>On the set theory page, you can visualize the concepts of unions, intersections, and complements. You can create sets by entering elements and apply operations to see the result...</p>
-        </section>
+        <div style={ styles.tutorialContainer }>
+          <Tippy trigger="click" placement='bottom' 
+            content={
+              <>
+                <SMText color='black' type='default'>
+        The union of two sets is all the elements which are in either set, denoted by the symbol ∪.
+                </SMText>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
+                  <SMText color='black' type='default'>
+                    <u style={{ color: 'black' }}>A ∪ B</u>
+                  </SMText>
+                  <SMText color='black' type='default'>
+                    <u style={{ color: 'black' }}>A ∪ C</u>
+                  </SMText>
+                  <SMText color='black' type='default'>
+                    <u style={{ color: 'black' }}>B ∪ C</u>
+                  </SMText>
+                </div>
+              </>
+            }
+            hideOnClick={true}
+          >
+            <div style={{ borderRadius: 40, }}>
+              <CircleItem
+                color='#e56b6f'
+                styles={ styles.hoverButton}
+                text="Union" 
+                isExpanded={expandedItem === 'Union'} 
+                onClick={() => handleItemClick('Union')}/>
+            </div>
+            
+          </Tippy>
+          <CircleItem
+            color='#b56576'
+            styles={ styles.hoverButton }
+            text="Intersection" 
+            isExpanded={expandedItem === 'Intersection'} 
+            onClick={() => handleItemClick('Intersection')} 
+          />
+          <CircleItem
+            color='#6d597a'
+            styles={ styles.hoverButton }
+            text="Compliment" 
+            isExpanded={expandedItem === 'Compliment'} 
+            onClick={() => handleItemClick('Compliment')} 
+          />
+        </div>
+        <div>
+          <AnimateCircles {...vennData}/>
+        </div>
       </div>
     </div>
   );
 };
+  
+const styles = {
+  tutorialContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+    height: 65,
+  },
+  hoverButton: {
+    paddingRight: 10,
+    paddingLeft: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
+    borderRadius: 40,
+    cursor: 'pointer',
+  },
+} as const;

@@ -5,14 +5,29 @@ import { VennDiagram } from '@upsetjs/venn.js';
 import { VennStateType } from '../../screens/SetTheory';
 import { SMText } from '../../custom/Text';
 
+// const colors = [
+//   // '#310A31',
+//   '#847996',
+//   '#88B7B5',
+//   '#A7CAB1',
+//   '#F4ECD6',
+//   '#A7CAB1',
+//   '#88B7B5',
+//   '#847996',
+//   // '#310A31',
+// ];
+
 const colors = [
-  'rgb(95, 106, 200)',
-  'rgb(168, 109, 140)',
-  'rgb(185, 117, 117)',
-  'rgb(226, 162, 45)',
-  'rgb(185, 117, 117)',
-  'rgb(168, 109, 140)',
-  'rgb(95, 106, 200)',
+  '#eaac8b',
+  '#e56b6f',
+  '#b56576',
+  '#6d597a',
+  '#355070',
+  '#355070',
+  '#6d597a',
+  '#b56576',
+  '#e56b6f',
+  '#eaac8b',
 ];
 
 const sets = [

@@ -7,6 +7,24 @@ html, body {
   /* background-color: black; */
 }
 
+/* Tippy box styling */
+.tippy-box[data-theme~='tomato'] {
+  background-color: #eee;
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-family: 'RobotoMono';
+  color: black;
+}
+
+.tippy-box[data-theme~='tomato'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #eee;
+}
+
+.tippy-box[data-theme~='tomato'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: #eee;
+}
+
 #root {
   display: flex;
   flex-direction: row; /* Align children horizontally */
@@ -21,4 +39,27 @@ svg text {
 
 * {
   font-family: "RobotoMono", Helvetica;
+  color: white;
+}
+
+.gradient-button {
+  display: flex;
+  /* background-image: linear-gradient(to right, 
+    #eaac8b 0%, 
+    #e56b6f 25%, 
+    #b56576 50%, 
+    #6d597a 75%, 
+    #355070 100%); */
+  border-radius: 50px;
+  padding: 5px 10px;
+  justify-content: center;
+  min-width: 50px;
+  max-width: 100px;
+  transition: transform 0.3s ease;
+  box-shadow: -3px 3px 10px 3px rgba(75, 75, 75, 1);
+  cursor: pointer;
+}
+
+.gradient-button:active {
+  transform: scale(0.95); /* Scales the button down to 95% of its original size */
 }
