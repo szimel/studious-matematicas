@@ -1,9 +1,9 @@
 import Tippy from '@tippyjs/react';
 import React, { useState } from 'react';
-import { SMText } from '../custom/Text';
-import { ReactComponent as SendIcon } from '../../icon-send.svg';
+import { SMText } from '../../custom/Text';
+import { ReactComponent as SendIcon } from '../../../icon-send.svg';
 import { useVennDiagramHighlighter } from './useVennDiagramHighlighter';
-import { VennStateType } from '../screens/SetTheory';
+import { VennStateType } from '../../screens/SetTheory';
 import 'tippy.js/animations/scale.css';
 
 

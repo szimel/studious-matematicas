@@ -2,8 +2,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { VennDiagram } from '@upsetjs/venn.js';
-import { VennStateType } from '../screens/SetTheory';
-import { SMText } from '../custom/Text';
+import { VennStateType } from '../../screens/SetTheory';
+import { SMText } from '../../custom/Text';
 
 const colors = [
   'rgb(95, 106, 200)',
