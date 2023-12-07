@@ -3,6 +3,7 @@ import React from 'react';
 import '../../css/set-theory.css';
 import { SMText } from '../custom/Text';
 import { useNavigate } from 'react-router-dom';
+import BouncyText from '../custom/BouncyText';
 
 export const Tutorial: React.FC = () => {
   const navigate = useNavigate();
@@ -14,10 +15,7 @@ export const Tutorial: React.FC = () => {
   return (
     <div className='st-container'>
       <div className='st-box'>
-        <SMText color='white' onClick={handleBackPressed} style={{ cursor: 'pointer' }}>
-          <u>{'<-'}Back</u>
-
-        </SMText>
+        <BouncyText onClick={handleBackPressed}><u>{'<-'}Back</u></BouncyText>
         <h1>Set Theory Tutorial</h1>
       
         <section>

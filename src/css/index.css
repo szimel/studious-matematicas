@@ -18,3 +18,7 @@ svg text {
   font-size: 20px;
   cursor: default;
 }
+
+* {
+  font-family: "RobotoMono", Helvetica;
+}

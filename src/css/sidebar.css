@@ -22,6 +22,10 @@
   transform: scale(1.2);
 }
 
+.sidebarBox:active .sm-text{
+  transform: scale(.9);
+}
+
 /* Hide hamburger icon on larger screens */
 .hamburger {
   display: none;

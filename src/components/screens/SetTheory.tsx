@@ -8,6 +8,7 @@ import {
 import tippy from 'tippy.js';
 import { SMText } from '../custom/Text';
 import { useNavigate } from 'react-router-dom';
+import BouncyText from '../custom/BouncyText';
 
 export type VennStateType = {
   solution: SolutionType;
@@ -40,9 +41,9 @@ export const SetTheory: React.FC = () => {
   return (
     <div className='st-container'>
       <div className='st-box'>
-        <SMText color='white' style={{ cursor: 'pointer' }} onClick={handleTutorialClick}>
+        <BouncyText onClick={handleTutorialClick}>
           <u>{'<-'}Tutorial</u>
-        </SMText>
+        </BouncyText>
         <AnimateCircles {...vennData}/>
       </div>
       <div className='STBottomContainer'>

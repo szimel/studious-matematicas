@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface PDTextProps extends React.HTMLProps<HTMLDivElement> {
-  type?: 'default' | 'heading';
+  type?: 'default' | 'heading' | 'bouncyText';
   color?: 'black' | 'white';
   style?: React.CSSProperties; 
 }
@@ -39,5 +39,13 @@ const textStyles = {
     fontWeight: 500,
     lineHeight: '150%',
     fontSize: '30px',
+  },
+  bouncyText: {
+    fontFamily: 'RobotoMono',
+    fontWeight: 500,
+    lineHeight: '150%',
+    fontSize: '16px',
+    cursor: 'pointer',
+    color: 'white',
   },
 };
