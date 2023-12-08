@@ -25,13 +25,20 @@
   background-color: rgb(33, 34, 37);
   flex-grow: 1;
   flex: 1;
-  padding: 40px;
-  gap: 40px;
+  padding: 35px;
   max-width: 100%;
 }
 
+.toolTipContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  height: 65px;
+}
+
 .st-box {
-  flex-grow: 1;
   border-radius: 15px;
   max-height: 100%;
 }
@@ -78,17 +85,26 @@
   cursor: pointer;
  }
 
-.tippy-box[data-theme~='tomato'] {
-  background-color: #eee;
-  padding: 15px;
-  border-radius: 15px;
-  color: black;
-  font-size: 16px;
-  font-family: 'RobotoMono';
-}
-
 @media screen and (max-width: 450px) {
   .st-container {
-    padding: 10px;
+    padding: 20px 10px;
+    margin-top: 50px;
+  }
+
+  .st-box {
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    max-height: 100%;
+    gap: 20px
+  }
+
+  .toolTipContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    height: 65px;
   }
 }

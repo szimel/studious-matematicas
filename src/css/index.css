@@ -7,14 +7,60 @@ html, body {
   /* background-color: black; */
 }
 
+/* Remove text being able to be selected */
+.noSelect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Tippy box styling */
+.tippy-box[data-theme~='tomato'] {
+  background-color: #eee;
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-family: 'RobotoMono';
+  color: black;
+}
+
+.tippy-box[data-theme~='tomato'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #eee;
+}
+
+.tippy-box[data-theme~='tomato'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: #eee;
+}
+
 #root {
   display: flex;
-  flex-direction: row; /* Align children horizontally */
-  height: 100vh; /* Full viewport height */
+  flex-direction: row; 
+  height: 100vh; 
 }
 
 svg text {
   font-family: "RobotoMono", Helvetica;
   font-size: 20px;
   cursor: default;
+}
+
+* {
+  font-family: "RobotoMono", Helvetica;
+}
+
+.gradient-button {
+  display: flex;
+  border-radius: 50px;
+  padding: 5px 10px;
+  justify-content: center;
+  min-width: 50px;
+  max-width: 100px;
+  transition: transform 0.3s ease;
+  box-shadow: -3px 3px 10px 3px rgba(75, 75, 75, 1);
+  cursor: pointer;
+}
+
+.gradient-button:active {
+  transform: scale(0.95); 
 }

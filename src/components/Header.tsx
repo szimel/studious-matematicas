@@ -27,15 +27,23 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
 
   return (
     <div style={ styles.container }>
-      <SMText className='pi-animation' style={{ fontSize: 30, cursor: 'default', }}>π</SMText>
+      <div className='logo'>
+        <SMText id='pi-7' type='header'>π</SMText>
+        <SMText id='pi-5' type='header'>π</SMText>
+        <SMText id='pi-4' type='header'>π</SMText>
+        <SMText id='pi-3' type='header'>π</SMText>
+        <SMText id='pi-2' type='header'>π</SMText>
+        <SMText id='pi-1' type='header'>π</SMText>
+      </div>
+
       <div style={{ flexDirection: 'row', display: 'flex' }}>
         <Tippy
           content={
-            <SMText>Check out the source code!</SMText>
+            <SMText color='black'>Check out the source code!</SMText>
           }
           hideOnClick={true}
         >
-          <img src='./icon-code.svg' alt="Code icon" height={30} width={30} onClick={openWindow} 
+          <img src='./icon-code.svg' alt="Code icon" height={40} width={40} onClick={openWindow} 
             style={{ cursor: 'pointer' }}/>
         </Tippy>
         <Tippy 
@@ -43,7 +51,7 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
             <div >
               {items.map((item, index) => (
                 <div className='sidebarBox' key={ index } onClick={handleClick(item.link)}>
-                  <SMText type='default' className='headerText'>
+                  <SMText color='black' type='default' className='headerText'>
                     {item.text}
                   </SMText>
                 </div>
@@ -63,7 +71,7 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
 const styles = {
   container: {
     display: 'flex',
-    maxHeight: 60,
+    height: 60,
     padding: '10px 20px',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -74,5 +82,10 @@ const styles = {
     backgroundColor: '#eee',
     borderRadius: 15,
     padding: 15,
-  }
+  },
+  headerImage: {
+    height: 60,
+    width: 60,
+    marginRight: 10,
+  },
 } as const; 

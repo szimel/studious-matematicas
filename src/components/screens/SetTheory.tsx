@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../../css/set-theory.css';
-import { Input } from '../helpers/input';
-import { AnimateCircles } from '../helpers/VennDiagram';
-import { SolutionType } from '../helpers/useVennDiagramHighlighter';
+import { Input } from '../helpers/set-theory/input';
+import { AnimateCircles } from '../helpers/set-theory/VennDiagram';
+import { 
+  SolutionType } from '../helpers/set-theory/useVennDiagramHighlighter';
 import tippy from 'tippy.js';
+import { useNavigate } from 'react-router-dom';
+import BouncyText from '../custom/BouncyText';
 
 export type VennStateType = {
   solution: SolutionType;
@@ -11,37 +14,28 @@ export type VennStateType = {
 };
 
 export const SetTheory: React.FC = () => {
-  //on load data
-  const diagramStyles: SolutionType = {
-    setA: false,
-    setB: false,
-    setC: false,
-    setAUnionB: false,
-    setAUnionC: false,
-    setBUnionC: false,
-    setAUnionBUnionC: false,
-  };
-
+  const navigate = useNavigate();
+  
   // tippy default for set theory popups
   tippy.setDefaultProps({
     animation: 'scale',
     theme: 'tomato',
   });
 
-  const initialState: VennStateType = {
-    solution: diagramStyles,
-    inputValue: '', // Initialize with an empty string or some default value
+  const handleTutorialClick = () => {
+    navigate('/tutorial');
   };
-
-  const [vennData, setVennData] = useState<VennStateType>(initialState);
 
   return (
     <div className='st-container'>
       <div className='st-box'>
-        <AnimateCircles {...vennData}/>
+        <BouncyText onClick={handleTutorialClick}>
+          <u className='noSelect'>{'<-'}Tutorial</u>
+        </BouncyText>
+        <AnimateCircles />
       </div>
       <div className='STBottomContainer'>
-        <Input setVennData={setVennData}/>
+        <Input />
       </div>
     </div>
   );
