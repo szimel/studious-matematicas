@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SMText } from '../../custom/Text';
 import { ReactComponent as SendIcon } from '../../../icon-send.svg';
 import 'tippy.js/animations/scale.css';
@@ -8,11 +8,19 @@ import { AppContext } from '../../Context';
 
 export const Input: React.FC = () => {
   const { updateVennData } = React.useContext(AppContext);
-  const [firstLoad, setFirstLoad] = useState(true); // make tippy show on first load
+  const [firstLoad, setFirstLoad] = useState(false); // make tippy show on first load
   const [inputValue, setInputValue] = useState('');
   const [color, setColor] = useState('rgb(87, 88, 90)');
   const blue = 'rgb(87, 88, 90)';
   const grey = 'rgb(151, 184, 248)';
+
+  // cuz tippy can't calculate the animation correctly on first load
+  useEffect(() => {
+    setTimeout(() => {
+      setFirstLoad(true);
+    }, 200);
+  
+  }, []);
 
   const validateInput = (value: string) => {
     const regex = /^[ABCUI() ∩∪ '’]*$/; // Allow A, B, C, U, I, parentheses, typographic apostrophes
@@ -92,6 +100,7 @@ export const Input: React.FC = () => {
             autoComplete="off"
             id="setInput" 
             placeholder="Enter a set relation" 
+            onClick={() => setFirstLoad(false)}
             onChange={(e) => validateInput(e.target.value)} 
             value={inputValue}
             onKeyDown={handleKeyDown}

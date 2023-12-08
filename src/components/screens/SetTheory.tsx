@@ -30,7 +30,7 @@ export const SetTheory: React.FC = () => {
     <div className='st-container'>
       <div className='st-box'>
         <BouncyText onClick={handleTutorialClick}>
-          <u>{'<-'}Tutorial</u>
+          <u className='noSelect'>{'<-'}Tutorial</u>
         </BouncyText>
         <AnimateCircles />
       </div>

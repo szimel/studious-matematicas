@@ -7,6 +7,14 @@ html, body {
   /* background-color: black; */
 }
 
+/* Remove text being able to be selected */
+.noSelect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 /* Tippy box styling */
 .tippy-box[data-theme~='tomato'] {
   background-color: #eee;
@@ -27,8 +35,8 @@ html, body {
 
 #root {
   display: flex;
-  flex-direction: row; /* Align children horizontally */
-  height: 100vh; /* Full viewport height */
+  flex-direction: row; 
+  height: 100vh; 
 }
 
 svg text {
@@ -39,17 +47,10 @@ svg text {
 
 * {
   font-family: "RobotoMono", Helvetica;
-  color: white;
 }
 
 .gradient-button {
   display: flex;
-  /* background-image: linear-gradient(to right, 
-    #eaac8b 0%, 
-    #e56b6f 25%, 
-    #b56576 50%, 
-    #6d597a 75%, 
-    #355070 100%); */
   border-radius: 50px;
   padding: 5px 10px;
   justify-content: center;
@@ -61,5 +62,5 @@ svg text {
 }
 
 .gradient-button:active {
-  transform: scale(0.95); /* Scales the button down to 95% of its original size */
+  transform: scale(0.95); 
 }

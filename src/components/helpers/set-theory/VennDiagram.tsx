@@ -102,7 +102,7 @@ export const AnimateCircles: React.FC = () => {
 
   return (
     <div className='VDContainer'>
-      <SMText style={{ color: 'white', fontSize: 22 }}>{inputValue}</SMText>
+      <SMText style={{ color: 'white', fontSize: 22, height: 22, }}>{inputValue}</SMText>
       <div id='svg' ref={vennRef} />
     </div>
   );

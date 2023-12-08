@@ -40,8 +40,8 @@ export const Tutorial: React.FC = () => {
   return (
     <div className='st-container'>
       <div className='st-box'>
-        <BouncyText onClick={() => navigate('/set-theory')}><u>{'<-'}Back</u></BouncyText>
-        <div style={ styles.tutorialContainer }>
+        <BouncyText onClick={() => navigate('/set-theory')}><u className='noSelect'>{'<-'}Back</u></BouncyText>
+        <div className='toolTipContainer'>
           <Tippy trigger="click" placement='bottom' interactive={true} visible={showTippy === 'Union'} onClickOutside={() => setExpandedItem('None') }
             content={
               <>
@@ -101,7 +101,7 @@ A union is every distinct element in both sets. <br/>Set A = [1, 2, 3] <br/>Set 
               />
             </div>
           </Tippy>
-          <Tippy trigger="click" placement='bottom' interactive={true} visible={showTippy === 'Compliment'} onClickOutside={() => setShowTippy('None')}
+          <Tippy trigger="click" placement='bottom' interactive={true} visible={showTippy === 'Compliment'} onClickOutside={() => setExpandedItem('None')}
             content={
               <>
                 <SMText color='black' style={{ cursor: 'pointer' }} >
@@ -141,14 +141,6 @@ A union is every distinct element in both sets. <br/>Set A = [1, 2, 3] <br/>Set 
 };
   
 const styles = {
-  tutorialContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 20,
-    height: 65,
-  },
   hoverButton: {
     paddingRight: 10,
     paddingLeft: 10,
@@ -156,5 +148,6 @@ const styles = {
     paddingBottom: 20,
     borderRadius: 40,
     cursor: 'pointer',
+    color: 'white',
   },
 } as const;

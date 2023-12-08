@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { SMText } from './custom/Text';
 import { SideBarProps } from './Sidebar';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,6 @@ import 'tippy.js/animations/scale.css';
 
 export const Header: React.FC<SideBarProps> = ({ items }) => {
   const navigate = useNavigate();
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   // tippy content
   tippy.setDefaultProps({
@@ -26,22 +25,17 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
 
   if (!items) {return null;}
 
-  const handleVideoClick = () => {
-    if (videoRef.current) {
-      videoRef.current.play();
-    }
-  };
-
   return (
     <div style={ styles.container }>
-      
-      {/* <SMText className='pi-animation' style={{ fontSize: 30, cursor: 'default', }}>π
-      </SMText> */}
-      {/* <img src='./pi.png' className='pi-animation' style={styles.headerImage}/> */}
-      <video ref={videoRef} autoPlay muted style={ styles.headerImage } onClick={handleVideoClick}>
-        <source src="./π.mp4" type="video/mp4"/>
-        Your browser does not support the video tag.
-      </video>
+      <div className='logo'>
+        <SMText id='pi-7' type='header'>π</SMText>
+        <SMText id='pi-5' type='header'>π</SMText>
+        <SMText id='pi-4' type='header'>π</SMText>
+        <SMText id='pi-3' type='header'>π</SMText>
+        <SMText id='pi-2' type='header'>π</SMText>
+        <SMText id='pi-1' type='header'>π</SMText>
+      </div>
+
       <div style={{ flexDirection: 'row', display: 'flex' }}>
         <Tippy
           content={
@@ -77,7 +71,7 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
 const styles = {
   container: {
     display: 'flex',
-    maxHeight: 60,
+    height: 60,
     padding: '10px 20px',
     alignItems: 'center',
     justifyContent: 'space-between',

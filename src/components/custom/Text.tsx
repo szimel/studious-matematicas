@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface PDTextProps extends React.HTMLProps<HTMLDivElement> {
-  type?: 'default' | 'heading' | 'bouncyText';
+  type?: 'default' | 'heading' | 'bouncyText' | 'header';
   color?: 'black' | 'white';
   style?: React.CSSProperties; 
 }
@@ -21,7 +21,7 @@ export const SMText: React.FC<PDTextProps> = (props) => {
   };
 
   return (
-    <div style={finalStyles} {...restProps}>
+    <div {...restProps} style={finalStyles} >
       {children}
     </div>
   );
@@ -47,5 +47,11 @@ const textStyles = {
     fontSize: '16px',
     cursor: 'pointer',
     color: 'white',
+  },
+  header: {
+    fontFamily: 'RobotoMono',
+    fontWeight: 700,
+    lineHeight: '100%',
+    fontSize: '60px',
   },
 };
