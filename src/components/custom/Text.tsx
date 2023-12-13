@@ -1,13 +1,13 @@
 import React from 'react';
 
-interface PDTextProps extends React.HTMLProps<HTMLDivElement> {
+interface SMTextProps extends React.HTMLProps<HTMLDivElement> {
   type?: 'default' | 'heading' | 'bouncyText' | 'header';
   color?: 'black' | 'white';
   style?: React.CSSProperties; 
 }
 
 
-export const SMText: React.FC<PDTextProps> = (props) => {
+export const SMText: React.FC<SMTextProps> = (props) => {
   const { type = 'default', color, style, children, ...restProps } = props;
 
   // Determine the preset style based on the type

@@ -8,6 +8,7 @@ import { CircleItem } from '../custom/AnimatedCircle';
 import { AnimateCircles } from '../helpers/set-theory/VennDiagram';
 import Tippy from '@tippyjs/react';
 import { AppContext } from '../Context';
+import { SMButton } from '../custom/Button';
 
 export const Tutorial: React.FC = () => {
   const { updateVennData } = React.useContext(AppContext);
@@ -44,23 +45,17 @@ export const Tutorial: React.FC = () => {
         <div className='toolTipContainer'>
           <Tippy trigger="click" placement='bottom' interactive={true} visible={showTippy === 'Union'} onClickOutside={() => setExpandedItem('None') }
             content={
-              <>
+              <div style={{ gap: 10, display: 'flex', flexDirection: 'column' }}>
                 <SMText color='black' type='default'> 
 A union is every distinct element in both sets. <br/>Set A = [1, 2, 3] <br/>Set B = [2, 3, 4] <br/>A ∪ B = [1, 2, 3, 4]         
                 </SMText>
                 <SMText color='black' >Visual Representation: </SMText>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
-                  <SMText color='black' style={{ cursor: 'pointer' }} onClick={handleTippyTextClick('A ∪ B')}>
-                    <u style={{ color: 'black' }}>A ∪ B</u>
-                  </SMText>
-                  <SMText color='black' style={{ cursor: 'pointer' }} onClick={handleTippyTextClick('A ∪ C')}>
-                    <u style={{ color: 'black' }}>A ∪ C</u>
-                  </SMText>
-                  <SMText color='black' style={{ cursor: 'pointer' }} onClick={handleTippyTextClick('B ∪ C')}>
-                    <u style={{ color: 'black' }}>B ∪ C</u>
-                  </SMText>
+                  <SMButton color='white' bgColor='black'onClick={handleTippyTextClick('A ∪ B')} text='A ∪ B'/>
+                  <SMButton color='white' bgColor='#e56b6f' onClick={handleTippyTextClick('A ∪ C')} text='A ∪ C' />
+                  <SMButton color='white' bgColor='#e56b6f' onClick={handleTippyTextClick('B ∪ C')} text='B ∪ C' />
                 </div>
-              </>
+              </div>
             }
           >
             <div style={{ borderRadius: 40 }}>
@@ -74,22 +69,17 @@ A union is every distinct element in both sets. <br/>Set A = [1, 2, 3] <br/>Set 
           </Tippy>
           <Tippy trigger="click" placement='bottom' interactive={true} visible={showTippy === 'Intersection'} onClickOutside={() => setExpandedItem('None')}
             content={
-              <>
+              <div style={{ gap: 10, display: 'flex', flexDirection: 'column' }}>
                 <SMText color='black' style={{ cursor: 'pointer' }} >
-                  An intersection is every element that is in both sets.<br/>Set A = [1, 2, 3] <br/>Set B = [2, 3, 4] <br/>A ∩ B = [2, 3]<br/> Visual Representation:
+                  An intersection is every element that is in both sets.<br/>Set A = [1, 2, 3] <br/>Set B = [2, 3, 4] <br/>A ∩ B = [2, 3]
                 </SMText>
+                <SMText color='black' >Visual Representation: </SMText>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
-                  <SMText color='black' style={{ cursor: 'pointer' }} onClick={handleTippyTextClick('A ∩ B')}>
-                    <u style={{ color: 'black' }}>A ∩ B</u>
-                  </SMText>
-                  <SMText color='black' style={{ cursor: 'pointer' }} onClick={handleTippyTextClick('A ∩ C')}>
-                    <u style={{ color: 'black' }}>A ∩ C</u>
-                  </SMText>
-                  <SMText color='black' style={{ cursor: 'pointer' }} onClick={handleTippyTextClick('B ∩ C')}>
-                    <u style={{ color: 'black' }}>B ∩ C</u>
-                  </SMText>
+                  <SMButton color='white' bgColor='#b56576' onClick={handleTippyTextClick('A ∩ B')} text='A ∩ B' />
+                  <SMButton color='white' bgColor='#b56576' onClick={handleTippyTextClick('A ∩ C')} text='A ∩ C' />
+                  <SMButton color='white' bgColor='#b56576' onClick={handleTippyTextClick('B ∩ C')} text='B ∩ C' />
                 </div>
-              </>
+              </div>
             }>
             <div style={{ borderRadius: 40 }}>
               <CircleItem
@@ -103,23 +93,18 @@ A union is every distinct element in both sets. <br/>Set A = [1, 2, 3] <br/>Set 
           </Tippy>
           <Tippy trigger="click" placement='bottom' interactive={true} visible={showTippy === 'Compliment'} onClickOutside={() => setExpandedItem('None')}
             content={
-              <>
+              <div style={{ gap: 10, display: 'flex', flexDirection: 'column' }}>
                 <SMText color='black' style={{ cursor: 'pointer' }} >
                   A compliment is every element in the first set that is not in the second set.<br/>Set A = [1, 2, 3]
-                  <br/>Set B = [2, 3, 4] <br/>Set C = [3, 4, 5]<br/>A{'\''} = [4, 5]<br/> Visual Representation:
+                  <br/>Set B = [2, 3, 4] <br/>Set C = [3, 4, 5]<br/>A{'\''} = [4, 5]
                 </SMText>
+                <SMText color='black' >Visual Representation: </SMText>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
-                  <SMText color='black' style={{ cursor: 'pointer' }} onClick={handleTippyTextClick('A\'')}>
-                    <u style={{ color: 'black' }}>A&apos;</u>
-                  </SMText>
-                  <SMText color='black' style={{ cursor: 'pointer' }} onClick={handleTippyTextClick('B\'')}>
-                    <u style={{ color: 'black' }}>B&apos;</u>
-                  </SMText>
-                  <SMText color='black' style={{ cursor: 'pointer' }} onClick={handleTippyTextClick('C\'')}>
-                    <u style={{ color: 'black' }}>C&apos;</u>
-                  </SMText>
+                  <SMButton color='white' bgColor='#6d597a' onClick={handleTippyTextClick('A\'')} text="A'" />
+                  <SMButton color='white' bgColor='#6d597a' onClick={handleTippyTextClick('B\'')} text="B'" />
+                  <SMButton color='white' bgColor='#6d597a' onClick={handleTippyTextClick('C\'')} text="C'" />
                 </div>
-              </>
+              </div>
             }>
             <div style={{ borderRadius: 40 }}>
               <CircleItem

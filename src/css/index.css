@@ -64,3 +64,20 @@ svg text {
 .gradient-button:active {
   transform: scale(0.95); 
 }
+
+.SMButton {
+  display: flex;
+  padding: 5px 10px;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  transform: ease 0.3s;
+}
+
+.SMButton:active {
+  transform: scale(0.95); 
+}
+
+.SMButton:hover {
+  opacity: .9;
+}
