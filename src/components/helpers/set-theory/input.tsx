@@ -1,112 +1,84 @@
-import Tippy from '@tippyjs/react';
-import React, { useEffect, useState } from 'react';
-import { SMText } from '../../custom/Text';
-import { ReactComponent as SendIcon } from '../../../icon-send.svg';
-import 'tippy.js/animations/scale.css';
+/* eslint-disable max-len */
+import React from 'react';
 import { AppContext } from '../../Context';
+import { SMButton } from '../../custom/Button';
+import { SMText } from '../../custom/Text';
 
 
 export const Input: React.FC = () => {
   const { updateVennData } = React.useContext(AppContext);
-  const [firstLoad, setFirstLoad] = useState(false); // make tippy show on first load
-  const [inputValue, setInputValue] = useState('');
-  const [color, setColor] = useState('rgb(87, 88, 90)');
-  const blue = 'rgb(87, 88, 90)';
-  const grey = 'rgb(151, 184, 248)';
-
-  // cuz tippy can't calculate the animation correctly on first load
-  useEffect(() => {
-    setTimeout(() => {
-      setFirstLoad(true);
-    }, 200);
-  
-  }, []);
-
-  const validateInput = (value: string) => {
-    const regex = /^[ABCUI() ∩∪ '’]*$/; // Allow A, B, C, U, I, parentheses, typographic apostrophes
-    let capsValue = value.toUpperCase();
-  
-    // If the value doesn't match the regex, remove the last character
-    if (!regex.test(capsValue)) {
-      value = value.slice(0, -1);
-    } else if (capsValue.slice(-1) === 'I') { // use intersection symbol
-      value = value.slice(0, -1) + '∩';
-    } else if (capsValue.slice(-1) === 'U') { // use union symbol
-      value = value.slice(0, -1) + '∪';
-    } else if (capsValue.slice(-1) === '’') { // use typographic apostrophe
-      value = value.slice(0, -1) + '\'';
-    }
-  
-    capsValue = value.toUpperCase();
-    setInputValue(capsValue);
-  
-    // Set color based on the current value
-    setColor(value.length > 0 ? grey : blue);
-  };
+  const [inputValue, setInputValue] = React.useState('Click the above buttons!');
+  // const buttonData = ['A', 'B', 'C', '∩', '∪', '’', '(', ')', 'delete'];
+  const buttonData = [
+    { text: 'A', bgColor: '#355070' },
+    { text: 'B', bgColor: '#485373' },
+    { text: 'C', bgColor: '#6d597a' },
+    { text: '∩', bgColor: '#855d79' },
+    { text: '∪', bgColor: '#9d6177' },
+    { text: '’', bgColor: '#b56576' },
+    { text: '(', bgColor: '#c56774' },
+    { text: ')', bgColor: '#d56971' },
+    { text: 'delete', bgColor: 'black' },
+  ];
 
   function handleSubmit() {
-    setColor(blue);
-    updateVennData( inputValue);
     setInputValue('');
+    updateVennData(inputValue);
   }
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleSubmit();
+  // adds and deletes input values
+  function changeInput(value: string) {
+    // change the initial text
+    if (inputValue.slice(-1) === '!') {setInputValue('');}
+
+    switch (value) {
+    case '’': {
+      const lastChar = inputValue.trimEnd().slice(-1);
+      // if the last character is a letter, add a typographic apostrophe
+      if (!new Set(['∩', '∪', '(', '’']).has(lastChar)) {
+        setInputValue(prevValue => `${prevValue.trimEnd()}${value + ' '}`);
+      }
+      break;
     }
-  };
-  
+    case 'delete':
+      setInputValue(prevValue => prevValue.trimEnd().slice(0, -1));
+      break;
+    case '(':
+      setInputValue(prevValue => `${prevValue}${value}`);
+      break;
+    case ')':
+      setInputValue(prevValue => `${prevValue.trimEnd()}${value + ' '}`);
+      break;
+    default:
+      setInputValue(prevValue => `${prevValue}${value + ' '}`);
+    }
+  }
+
   return (
     <>
-      <SMText type='default' style={{ color: 'white', marginBottom: 10 }}>
-          Use the{' '}
-        <Tippy content={
-          <SMText color='black'>
-            Sets are collections of distinct objects, considered as an object in its own right.
-          </SMText>
-        }>
-          <span id='sets'>
-            Sets
-          </span>
-        </Tippy>
-        {' A, B, and C to find the relation between '}
-        <Tippy content={
-          <SMText color='black'>
-            A union in set theory is all the unique elements from both sets
-          </SMText>
-        }>
-          <span id='union'>Unions</span>
-        </Tippy>
-        {' and '}
-        <Tippy content={
-          <SMText color='black'>
-            An intersection in set theory is all the elements common to both sets
-          </SMText>
-        }>
-          <span id='intersection'>Intersections</span>
-        </Tippy>
-      </SMText>
-
-      <div className='inputContainer'>
-        <Tippy visible={firstLoad} onClickOutside={() => setFirstLoad(false)} content={
-          <SMText color='black'>
-            This input only accepts the characters A, B, C, U, I, parentheses, and apostrophes. 
-            <br/>
-            Type &apos;u&apos; for a union symbol and &apos;i&apos; for an intersection symbol
-          </SMText>
-        }>
-          <input 
-            type="text"
-            autoComplete="off"
-            id="setInput" 
-            placeholder="Enter a set relation" 
-            onClick={() => setFirstLoad(false)}
-            onChange={(e) => validateInput(e.target.value)} 
-            value={inputValue}
-            onKeyDown={handleKeyDown}
+      <div className='inputButtonContainer' >
+        {buttonData.map((button, index) => (
+          <SMButton
+            key={index}
+            color={'white'}
+            bgColor={button.bgColor}
+            onClick={() => changeInput(button.text)}
+            text={button.text}
           />
-        </Tippy>
-        <SendIcon width={30} height={30} fill={color} onClick={handleSubmit}/>
+        ))}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: 10, marginTop: 10 }}>
+        <div className='inputContainer'>
+          <SMText type='default' color='white'>
+            {inputValue}
+          </SMText>
+        </div>  
+        <SMButton 
+          color='black' 
+          disabled={inputValue.length === 0} 
+          bgColor='white' 
+          onClick={handleSubmit} 
+          text='Submit'/>
       </div>
     </>
   );

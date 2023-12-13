@@ -77,7 +77,7 @@ function tokenize(input: string): Token[] {
     case '∩':
       tokens.push({ type: 'INTERSECTION', value: char });
       break;
-    case '\'':
+    case '’':
       tokens.push({ type: 'COMPLEMENT', value: char });
       break;
     case '(':
