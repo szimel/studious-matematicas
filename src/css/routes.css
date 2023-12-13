@@ -39,4 +39,8 @@
   .routes-content {
     padding: 5px;
   }
+  
+  .routes-container {
+    max-width: 100%;
+  }
 }

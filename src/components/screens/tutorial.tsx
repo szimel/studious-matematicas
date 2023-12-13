@@ -51,7 +51,7 @@ A union is every distinct element in both sets. <br/>Set A = [1, 2, 3] <br/>Set 
                 </SMText>
                 <SMText color='black' >Visual Representation: </SMText>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
-                  <SMButton color='white' bgColor='black'onClick={handleTippyTextClick('A ∪ B')} text='A ∪ B'/>
+                  <SMButton color='white' bgColor='#e56b6f'onClick={handleTippyTextClick('A ∪ B')} text='A ∪ B'/>
                   <SMButton color='white' bgColor='#e56b6f' onClick={handleTippyTextClick('A ∪ C')} text='A ∪ C' />
                   <SMButton color='white' bgColor='#e56b6f' onClick={handleTippyTextClick('B ∪ C')} text='B ∪ C' />
                 </div>

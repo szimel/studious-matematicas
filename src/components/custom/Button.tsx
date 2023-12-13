@@ -5,14 +5,21 @@ import { motion } from 'framer-motion';
 
 interface SMButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color?: string;
-  bgColor?: string;
+  disabled?: boolean
+  bgColor: string;
   style?: React.CSSProperties; 
   onClick?: () => void;
   text: string;
 }
 
 export const SMButton: React.FC<SMButtonProps> = (props) => {
-  const { color, style, text, bgColor, onClick, ...restProps } = props;
+  const { color, style, text, disabled } = props;
+  let { bgColor, onClick } = props;
+
+  if (disabled) {
+    bgColor = 'grey';
+    onClick = () => {null;};
+  }
 
   const finalStyles = {
     borderStyle: 'solid',
@@ -26,8 +33,8 @@ export const SMButton: React.FC<SMButtonProps> = (props) => {
     <motion.button
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: .9 }}
-      onClick={onClick}
       className='SMButton'
+      onClick={onClick}
       style={{ ...finalStyles }}>
       <SMText style={ { color } }>
         {text}

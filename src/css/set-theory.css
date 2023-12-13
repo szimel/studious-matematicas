@@ -1,22 +1,3 @@
-#setInput {
-  height: 50px;
-  flex-grow: 1;
-  border-radius: 25px;
-  border: 1px solid white;
-  background-color: black;
-  padding-left: 15px;
-  font-family: 'RobotoMono', sans-serif;
-  font-size: 16px; 
-  color: white;
-}
-
-#setInput::placeholder {
-  color: rgba(255, 255, 255, 0.868); 
-  font-family: 'RobotoMono', sans-serif; 
-  font-size: 16px; 
-  opacity: 1;
-} 
-
 .st-container {
   display: flex;
   flex-direction: column; /* Stack children vertically */
@@ -42,14 +23,23 @@
   max-height: 100%;
 }
 
+.inputButtonContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
 .inputContainer {
   display: flex;
-  flex: 1;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  background-color: #191A1E;
+  border: 1px solid white;
+  flex: 1;
+  border-radius: 10px;
+  padding: 5px 5px 5px 13px;
   gap: 10px;
-  max-height: 50px;
-  box-sizing: border-box;
 }
 
 .STBottomContainer {
@@ -86,8 +76,19 @@
 
 @media screen and (max-width: 450px) {
   .st-container {
+    max-width: 100%;
     padding: 20px 10px;
     margin-top: 50px;
+  }
+
+  .inputButtonContainer {
+    max-width: 100%;
+    overflow: auto;
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
   }
 
   .st-box {
