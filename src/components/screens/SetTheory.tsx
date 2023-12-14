@@ -7,6 +7,7 @@ import {
 import tippy from 'tippy.js';
 import { useNavigate } from 'react-router-dom';
 import BouncyText from '../custom/BouncyText';
+import { AppContext } from '../Context';
 
 export type VennStateType = {
   solution: SolutionType;
@@ -14,6 +15,7 @@ export type VennStateType = {
 };
 
 export const SetTheory: React.FC = () => {
+  const { setTippyVisible } = React.useContext(AppContext); // context for closing error tippy
   const navigate = useNavigate();
   
   // tippy default for set theory popups
@@ -23,6 +25,7 @@ export const SetTheory: React.FC = () => {
   });
 
   const handleTutorialClick = () => {
+    setTippyVisible('nonsensical');
     navigate('/tutorial');
   };
 

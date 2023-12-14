@@ -11,10 +11,9 @@ import { AppContext } from '../Context';
 import { SMButton } from '../custom/Button';
 
 export const Tutorial: React.FC = () => {
-  const { updateVennData } = React.useContext(AppContext);
+  const { updateVennData, tippyVisible, setTippyVisible } = React.useContext(AppContext);// for tippy visibility and setting venn diagram
   const navigate = useNavigate();
   const [expandedItem, setExpandedItem] = useState('None'); // for circle item expansion
-  const [showTippy, setShowTippy] = useState('None'); // for tippy visibility
 
   const handleItemClick = (item: string) => {
     setExpandedItem(item);
@@ -34,16 +33,22 @@ export const Tutorial: React.FC = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      setShowTippy(expandedItem);
+      setTippyVisible(expandedItem);
     }, 200);
   }, [expandedItem]);
+
+  function handleNavigate() {
+    setTippyVisible('nonsense');
+    setExpandedItem('None');
+    navigate('/set-theory');
+  }
 
   return (
     <div className='st-container'>
       <div className='st-box'>
-        <BouncyText onClick={() => navigate('/set-theory')}><u className='noSelect'>{'<-'}Back</u></BouncyText>
+        <BouncyText onClick={handleNavigate}><u className='noSelect'>{'<-'}Back</u></BouncyText>
         <div className='toolTipContainer'>
-          <Tippy trigger="click" placement='bottom' interactive={true} visible={showTippy === 'Union'} onClickOutside={() => setExpandedItem('None') }
+          <Tippy placement='bottom' interactive={true} visible={tippyVisible === 'Union'} onClickOutside={() => setExpandedItem('None') }
             content={
               <div style={{ gap: 10, display: 'flex', flexDirection: 'column' }}>
                 <SMText color='black' type='default'> 
@@ -67,7 +72,7 @@ A union is every distinct element in both sets. <br/>Set A = [1, 2, 3] <br/>Set 
                 onClick={() => handleItemClick('Union')}/>
             </div>
           </Tippy>
-          <Tippy trigger="click" placement='bottom' interactive={true} visible={showTippy === 'Intersection'} onClickOutside={() => setExpandedItem('None')}
+          <Tippy placement='bottom' interactive={true} visible={tippyVisible === 'Intersection'} onClickOutside={() => setExpandedItem('None')}
             content={
               <div style={{ gap: 10, display: 'flex', flexDirection: 'column' }}>
                 <SMText color='black' style={{ cursor: 'pointer' }} >
@@ -91,7 +96,7 @@ A union is every distinct element in both sets. <br/>Set A = [1, 2, 3] <br/>Set 
               />
             </div>
           </Tippy>
-          <Tippy trigger="click" placement='bottom' interactive={true} visible={showTippy === 'Compliment'} onClickOutside={() => setExpandedItem('None')}
+          <Tippy placement='bottom' interactive={true} visible={tippyVisible === 'Compliment'} onClickOutside={() => setExpandedItem('None')}
             content={
               <div style={{ gap: 10, display: 'flex', flexDirection: 'column' }}>
                 <SMText color='black' style={{ cursor: 'pointer' }} >

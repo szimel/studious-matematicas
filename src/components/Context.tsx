@@ -15,6 +15,8 @@ interface AppContextProviderProps {
 interface AppContextType {
   vennData: VennStateType;
   updateVennData: (inputValue: string) => void;
+  tippyVisible: string;
+  setTippyVisible: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // Define a default context value
@@ -32,6 +34,8 @@ const defaultContextValue: AppContextType = {
     inputValue: '',
   },
   updateVennData: () => {}, 
+  tippyVisible: 'goEagles',
+  setTippyVisible: () => {},
 };
 
 // Create the context with the default value
@@ -49,8 +53,11 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({ children
     }));
   };
 
+  // context for closing tippy's on clicks outside tippy scope
+  const [tippyVisible, setTippyVisible] = useState('');
+
   return (
-    <AppContext.Provider value={{ vennData, updateVennData }}>
+    <AppContext.Provider value={{ vennData, updateVennData, tippyVisible, setTippyVisible }}>
       {children}
     </AppContext.Provider>
   );

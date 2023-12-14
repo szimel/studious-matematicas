@@ -25,7 +25,7 @@ export const CircleItem: React.FC<CircleItemProps> = (props) => {
       style={{ ...styles }}
       onClick={onClick}
       animate={{
-        backgroundColor: isExpanded ? color : 'transparent',
+        backgroundColor: isExpanded ? color : 'rgba(0, 0, 0, 0.01)',
         padding: isExpanded ? '20px 15px' : '10px 10px',
         scale: isExpanded ? 1.1 : 1,
       }}
