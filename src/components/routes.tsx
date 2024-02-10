@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { SideBar, SideBarItem } from './Sidebar';
 import { SetTheory } from './screens/SetTheory';
 import { Header } from './Header';
-import { Tutorial } from './screens/tutorial';
+import { Tutorial } from './screens/Tutorial';
 import { AnimatedRoute } from './helpers/animatedRoute';
 import { AnimatePresence } from 'framer-motion';
 import { AppContextProvider } from './Context';
