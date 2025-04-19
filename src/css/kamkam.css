@@ -1,0 +1,131 @@
+.test-results-container {
+	max-width: 600px; /* Max width for larger screens */
+	margin: 0 auto; /* Center the container */
+	padding: 20px;
+	background-color: #fff; /* White background for the content box */
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+	box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.test-header {
+	text-align: center;
+	margin-bottom: 30px;
+	padding-bottom: 15px;
+	border-bottom: 2px solid #eee; /* Separator line */
+}
+
+.test-header h1 {
+	font-size: 1.6em; /* Adjust font size for mobile */
+	color: #333;
+	margin: 0;
+}
+
+.test-section {
+	margin-bottom: 25px; /* Space between sections */
+	padding-bottom: 15px;
+	border-bottom: 1px solid #eee; /* Separator line */
+}
+
+/* Remove border from the last section */
+.test-section:last-child {
+	border-bottom: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.test-section h2 {
+	font-size: 1.3em; /* Adjust font size */
+	color: #555;
+	margin-top: 0;
+	margin-bottom: 10px;
+}
+
+.test-section h3 {
+	font-size: 1.1em; /* Adjust font size */
+	color: #777;
+	margin-top: 0;
+	margin-bottom: 8px;
+}
+
+.test-section p {
+	margin-top: 0;
+	margin-bottom: 0;
+	color: #666;
+}
+
+.administered-section strong {
+	color: #444; /* Slightly darker color for emphasis */
+}
+
+.answer-box {
+	display: flex; /* Use flexbox for alignment */
+	align-items: flex-start; /* Align items to the top */
+}
+
+.checkbox {
+	font-weight: bold;
+	font-size: 1.3em; /* Make checkbox stand out */
+	margin-right: 10px; /* Space between checkbox and text */
+	color: #28a745; /* Green color for the check */
+	flex-shrink: 0; /* Prevent checkbox from shrinking */
+}
+
+.answer-text {
+	flex-grow: 1; /* Allow text to take up remaining space */
+	font-size: 1em;
+	color: #333;
+}
+
+
+.result-section {
+	margin-top: 30px; /* More space before result */
+	padding: 20px;
+	background-color: #d4edda; /* Light green background */
+	border: 1px solid #c3e6cb; /* Green border */
+	border-radius: 5px;
+	text-align: center; /* Center the result text */
+}
+
+.result-section h3 {
+	 margin-top: 0;
+	 color: #218838; /* Darker green for heading */
+}
+
+.pass-result {
+	font-size: 1.8em; /* Larger font for the PASS result */
+	font-weight: bold;
+	color: #28a745; /* Strong green color */
+	margin: 0; /* Remove default paragraph margin */
+}
+
+.analysis-section {
+	margin-top: 25px;
+	border-top: 1px dashed #eee; /* Dashed line separator */
+	padding-top: 15px;
+}
+
+.analysis-note {
+	font-size: 0.9em; /* Smaller font for the note */
+	color: #888; /* Lighter color */
+	font-style: italic;
+}
+
+/* Media query for slightly larger screens (optional, as basic design is responsive) */
+@media (min-width: 600px) {
+	.test-header h1 {
+			font-size: 2em; /* Larger font on wider screens */
+	}
+
+	.test-section h2 {
+			font-size: 1.5em;
+	}
+
+	.test-section h3 {
+			font-size: 1.2em;
+	}
+
+	 .pass-result {
+			font-size: 2em; /* Even larger on wider screens */
+	}
+}
