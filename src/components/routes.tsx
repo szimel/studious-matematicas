@@ -8,6 +8,7 @@ import { Tutorial } from './screens/Tutorial';
 import { AnimatedRoute } from './helpers/animatedRoute';
 import { AnimatePresence } from 'framer-motion';
 import { AppContextProvider } from './Context';
+import { KamTest } from './screens/Kamkam';
 
 const AppRoutes: React.FC = () => {
   // items in side bar
@@ -31,6 +32,7 @@ const AppRoutes: React.FC = () => {
                   <Route path="/" element={<Navigate to="/set-theory" replace />} />
                   <Route path="/set-theory" element={<AnimatedRoute><SetTheory/></AnimatedRoute>} />
                   <Route path='/tutorial' element={<AnimatedRoute><Tutorial/></AnimatedRoute>} />
+                  <Route path="/kamkam" element={<KamTest />} />
                 </Routes>
               </AnimatePresence>
             </div>
