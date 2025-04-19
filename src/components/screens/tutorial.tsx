@@ -101,7 +101,7 @@ A union is every distinct element in both sets. <br/>Set A = [1, 2, 3] <br/>Set 
               <div style={{ gap: 10, display: 'flex', flexDirection: 'column' }}>
                 <SMText color='black' style={{ cursor: 'pointer' }} >
                   A compliment is every element in the first set that is not in the second set.<br/>Set A = [1, 2, 3]
-                  <br/>Set B = [2, 3, 4] <br/>Set C = [3, 4, 5]<br/>A{'’'} = [4, 5]
+                  <br/>Set B = [2, 3, 4] <br/>Set C = [3, 4, 5]<br/>A{''} = [4, 5]
                 </SMText>
                 <SMText color='black' >Visual Representation: </SMText>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>

@@ -1,35 +1,30 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 
-
 interface AnimatedRouteProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
-
 
 const pageVariants = {
   initial: {
     opacity: 0,
-    x: -250, 
-    // scale: 0.85
+    x: -250,
   },
   in: {
     opacity: 1,
-    x: 0, 
-    scale: 1 
+    x: 0,
+    scale: 1,
   },
 };
 
-
 const pageTransition = {
   type: 'spring',
-  stiffness: 300, // controls the stiffness of the spring
-  damping: 25, // controls how the spring slows down
-  mass: 1.5, // mass of the moving object
+  stiffness: 300,
+  damping: 25,
+  mass: 1.5,
 };
-
 
 export const AnimatedRoute: React.FC<AnimatedRouteProps> = ({ children }) => {
   const location = useLocation();
@@ -46,6 +41,9 @@ export const AnimatedRoute: React.FC<AnimatedRouteProps> = ({ children }) => {
   );
 };
 
+
 AnimatedRoute.propTypes = {
-  children: PropTypes.node.isRequired
+  // eslint-disable-next-line
+  children: PropTypes.node.isRequired as any,
 };
+
