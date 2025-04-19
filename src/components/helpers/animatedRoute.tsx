@@ -41,7 +41,9 @@ export const AnimatedRoute: React.FC<AnimatedRouteProps> = ({ children }) => {
   );
 };
 
+
 AnimatedRoute.propTypes = {
+  // eslint-disable-next-line
   children: PropTypes.node.isRequired as any,
 };
 
