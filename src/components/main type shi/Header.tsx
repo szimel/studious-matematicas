@@ -1,13 +1,11 @@
 import React from 'react';
-import { SMText } from './custom/Text';
-import { SideBarProps } from './Sidebar';
-import { useNavigate } from 'react-router-dom';
+import { SMText } from '../custom/Text';
 import Tippy, { tippy } from '@tippyjs/react';
-import '../css/header.css';
+import '../../css/header.css';
 import 'tippy.js/animations/scale.css';
+import { Routes } from '../helpers/renderRoutes';
 
-export const Header: React.FC<SideBarProps> = ({ items }) => {
-  const navigate = useNavigate();
+export const Header: React.FC = () => {
 
   // tippy content
   tippy.setDefaultProps({
@@ -15,15 +13,9 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
     theme: 'tomato',
   });
 
-  const handleClick = (link: string) => () => {
-    navigate(link);
-  };
-
   const openWindow = () => {
     window.open('https://github.com/szimel/studious-matematicas');
   };
-
-  if (!items) {return null;}
 
   return (
     <div style={ styles.container }>
@@ -47,17 +39,7 @@ export const Header: React.FC<SideBarProps> = ({ items }) => {
             style={{ cursor: 'pointer' }}/>
         </Tippy>
         <Tippy 
-          content={ 
-            <div >
-              {items.map((item, index) => (
-                <div className='sidebarBox' key={ index } onClick={handleClick(item.link)}>
-                  <SMText color='black' type='default' className='headerText'>
-                    {item.text}
-                  </SMText>
-                </div>
-              ))}
-            </div>
-          }
+          content={<Routes />}
           interactive={true}
           allowHTML={true}
         >

@@ -20,12 +20,18 @@
   100% { color: rgb(95, 106, 200); }
 }
 
+/* Contains dropdown content on routes */
+.subRouteContainer {
+	margin-top: -15px;
+	padding-left: 10px;
+}
+
 .pi-animation {
   animation: rainbow-text 3s linear infinite;
 }
 
 .hamburgerIcon {
-  display: none;
+	margin-left: 20px;
 }
 
 .dropdown {
@@ -41,12 +47,6 @@
   padding: 5px 15px;
   color: black;
   cursor: pointer;
-}
-
-/* Only apply the transformation on hover */
-.sidebarBox:hover .headerText{
-  background-color: rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
 }
 
 .logo {
@@ -127,14 +127,4 @@
 .logo > div:nth-child(3) { animation-delay: 0.4s; }
 .logo > div:nth-child(2) { animation-delay: 0.5s; }
 .logo > div:nth-child(1) { animation-delay: 0.6s; }
-
-
-
-
-@media screen and (max-width: 1000px) {
-  .hamburgerIcon {
-    display: block;
-    margin-left: 20px;
-  }
-}
 

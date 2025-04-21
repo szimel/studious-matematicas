@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppContext } from '../../Context';
+import { AppContext } from '../../main type shi/Context';
 import { SMButton } from '../../custom/Button';
 import { SMText } from '../../custom/Text';
 import Tippy from '@tippyjs/react';
