@@ -70,7 +70,7 @@ $$
 
 **lcm** is the exact same, except with max() instead. They're pretty cool and intuitive relationships. I used these definitions a ton in my abstract algebra class - really, **gcd, lcm** are used as building blocks by a lot by other theorems and definitions.
 
-### EXTRA
+### EXTRA!
 
 I recently learned:  
 $\gcd(a, b) \cdot \text{lcm}(a, b) = a \cdot b$
