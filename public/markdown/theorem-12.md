@@ -13,29 +13,12 @@ $$
 
 ---
 
-Not sure why the book doesn't throw in $\gcd$ and $\text{lcm}$ before the parentheses... it makes it a lot more complicated. Not sure the lcm technical definition. Informally, it's the smallest number both can divide into without a remainder.
+Not sure why the book doesn't throw in gcd and lcm... Kinda dumb. Some quick refreshers just in case:
 
-But I would like to flex the definitions I have from my abstract algebra class:
-
-Let $a, b \in \mathbb{Z}$ and suppose that $a$ and $b$ aren't both zero. The **greatest common divisor** of $a$ and $b$, denoted as $\gcd(a,b)$ is defined as follows:
-
-1. $\gcd(a,b) > 0$
-2. $\gcd(a,b) \mid a$ (note: this reads gcd(a,b) divides a. Meaning $a \div \gcd(a, b) \in \mathbb{Z}$)
-3. $\gcd(a,b) \mid b$
-4. If $d$ is a common divisor of $a$ and $b$, then $d \leq \gcd(a,b)$
-
-Let $a, b \in \mathbb{Z}, a,b \neq 0$. The **least common multiple** of $a$ and $b$, denoted $\text{lcm}(a,b)$ is defined as follows:
-
-1. $\text{lcm}(a,b) > 0$
-2. $a \mid \text{lcm}(a,b)$
-3. $b \mid \text{lcm}(a,b)$
-4. if $t > 0$ and $a \mid t, b \mid t$ then $\text{lcm} \leq t$
-
----
-
-Some quick background in case you didn't know:  
-$\min(a, b)$ chooses the smaller number between $a$ and $b$.  
-$\max(a, b)$ chooses the larger number.
+1. gcd(a,b) = greatest common divisor, meaning largest number that divides a abd b with no remainder
+2. lcm(a,b) = least common multiple, meaning the smallest number that can be divided by a and b with no remainder.
+3. $\min(a, b)$ chooses the smaller number between $a$ and $b$.
+4. $\max(a, b)$ chooses the larger number.
 
 ---
 
