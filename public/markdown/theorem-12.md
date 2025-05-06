@@ -13,7 +13,7 @@ $$
 
 ---
 
-Not sure why the book doesn't throw in gcd and lcm... Kinda dumb. Some quick refreshers just in case:
+Not sure why the book doesn't throw in gcd and lcm... Kinda dumb. Some quick refreshers just in case.
 
 1. gcd(a,b) = greatest common divisor, meaning largest number that divides a abd b with no remainder
 2. lcm(a,b) = least common multiple, meaning the smallest number that can be divided by a and b with no remainder.
@@ -24,7 +24,7 @@ Not sure why the book doesn't throw in gcd and lcm... Kinda dumb. Some quick ref
 
 ### Theorem 12 Example:
 
-So let's put a real example to the definitions. Let's take two numbers, say 420 and 490. Then:
+So let's put a real example to the definitions. Let's take two numbers, say 420 and 490.
 
 $$
 \begin{aligned}
