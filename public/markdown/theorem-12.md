@@ -76,9 +76,3 @@ I recently learned:
 $\gcd(a, b) \cdot \text{lcm}(a, b) = a \cdot b$
 
 If you're feeling voracious, prove it or find the logic behind it. It should be hard to prove... but I bet your intuition can get you close. Call me and teach me why.
-
-$$
-q_i = \{2, 3, 5, 7\} \\
-\alpha_i = \{2, 1, 1, 1\} \\
-\prod_{i=1}^{4} q_i^{\alpha_i} = ???
-$$
