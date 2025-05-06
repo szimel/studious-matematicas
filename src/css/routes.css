@@ -6,6 +6,13 @@
   background-color: black; 
 }
 
+.markdown {
+  margin: 10px auto;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
 /* Sidebar styling */
 .sidebar {
   display: flex;

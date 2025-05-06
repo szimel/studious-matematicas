@@ -8,7 +8,7 @@ import { AnimatedRoute } from './helpers/animatedRoute';
 import { AnimatePresence } from 'framer-motion';
 import { AppContextProvider } from './main type shi/Context';
 import { KamTest } from './screens/Kamkam';
-import { TaeExample } from './screens/TaeExample';
+import { TaeExample } from './screens/matea/[id]';
 
 const AppRoutes: React.FC = () => (
   <div className="routes-container">
@@ -23,8 +23,8 @@ const AppRoutes: React.FC = () => (
                 <Route path="/set-theory" element={<AnimatedRoute><SetTheory/></AnimatedRoute>} />
                 <Route path='/tutorial' element={<AnimatedRoute><Tutorial/></AnimatedRoute>} />
                 <Route path='/kamkam' element={<KamTest />} />
-                <Route path="/example" element={<Navigate to="/example/1" replace />} />
-                <Route path="/example/:id" element={
+                <Route path="/matea" element={<Navigate to="/matea/theorem-12" replace />} />
+                <Route path="/matea/:id" element={
                   <AnimatedRoute><TaeExample /></AnimatedRoute>
                 } />
               </Routes>
