@@ -7,7 +7,7 @@ import BouncyText from '../custom/BouncyText';
 import { CircleItem } from '../custom/AnimatedCircle';
 import { AnimateCircles } from '../helpers/set-theory/VennDiagram';
 import Tippy from '@tippyjs/react';
-import { AppContext } from '../Context';
+import { AppContext } from '../main type shi/Context';
 import { SMButton } from '../custom/Button';
 
 export const Tutorial: React.FC = () => {

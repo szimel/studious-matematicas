@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useState, createContext } from 'react';
-import { VennStateType } from './screens/SetTheory';
+import { VennStateType } from '../screens/SetTheory';
 import { 
   SolutionType, 
   useVennDiagramHighlighter 
-} from './helpers/set-theory/useVennDiagramHighlighter';
+} from '../helpers/set-theory/useVennDiagramHighlighter';
 
 interface AppContextProviderProps {
   children: React.ReactNode;
@@ -62,3 +62,32 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({ children
     </AppContext.Provider>
   );
 };
+
+
+// all the static stuff for routes
+export interface SideBarItem {
+  link: string;
+  text: string;
+	subRoute?: SideBarItem[];
+}
+
+export interface SideBarProps {
+  items?: SideBarItem[];
+}
+
+export const items: SideBarItem[] = [
+  {
+    link: '/set-theory',
+    text: 'Set Theory'
+  },
+  {
+    link: '/matea',
+    text: 'MATEA',
+    subRoute: [
+      {
+        link: '/matea/theorem-12',
+        text: 'Theorem 12',
+      },
+    ]
+  },
+];

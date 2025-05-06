@@ -7,7 +7,7 @@ import {
 import tippy from 'tippy.js';
 import { useNavigate } from 'react-router-dom';
 import BouncyText from '../custom/BouncyText';
-import { AppContext } from '../Context';
+import { AppContext } from '../main type shi/Context';
 
 export type VennStateType = {
   solution: SolutionType;
