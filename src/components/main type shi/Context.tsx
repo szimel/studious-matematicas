@@ -77,6 +77,10 @@ export interface SideBarProps {
 
 export const items: SideBarItem[] = [
   {
+    link: '/seeing-sounds',
+    text: 'Sounds Visualized'
+  },
+  {
     link: '/set-theory',
     text: 'Set Theory'
   },

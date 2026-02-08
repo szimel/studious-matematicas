@@ -25,7 +25,6 @@
         "curly": "error",
         "no-unused-vars": "warn",
         "no-console": "warn",
-        "max-len": ["error", { "code": 100 }],
         "keyword-spacing": ["error", { "before": true, "after": true }],
         "object-curly-spacing": ["error", "always"],
         "array-bracket-spacing": ["error", "never"],

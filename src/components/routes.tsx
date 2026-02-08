@@ -9,6 +9,7 @@ import { AnimatePresence } from 'framer-motion';
 import { AppContextProvider } from './main type shi/Context';
 import { KamTest } from './screens/Kamkam';
 import { TaeExample } from './screens/matea/[id]';
+import { SeeingSounds } from './screens/SeeingSounds';
 
 const AppRoutes: React.FC = () => (
   <div className="routes-container">
@@ -27,6 +28,7 @@ const AppRoutes: React.FC = () => (
                 <Route path="/matea/:id" element={
                   <AnimatedRoute><TaeExample /></AnimatedRoute>
                 } />
+                <Route path="/seeing-sounds" element={<SeeingSounds />} />
               </Routes>
             </AnimatePresence>
           </div>
