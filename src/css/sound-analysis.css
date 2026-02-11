@@ -172,7 +172,7 @@
 @media (max-width: 900px) {
   .analysis-main {
     flex-direction: column;
-    min-height: auto;
+    min-height: 0;
   }
 
   .perspective-sidebar {
@@ -180,10 +180,13 @@
 		padding: 10px;
 		width: 100%;
 		box-sizing: border-box;
+    flex-shrink: 0;
   }
 
   .visualizer-container {
     order: 2;
+    flex: 1;
+    min-height: 300px;
   }
 
   .analysis-header {

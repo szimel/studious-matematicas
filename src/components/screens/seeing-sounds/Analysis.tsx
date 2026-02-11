@@ -43,6 +43,7 @@ export const SeeingSoundsAnalysis: React.FC = () => {
   // time passed from audio player
   const handleSync = (time: number) => {
     const frame = Math.floor(time * report.fps);
+    audioRef.current?.currentTime && setCurrentFrame(frame);
     setCurrentFrame(frame);
   };
 
@@ -77,7 +78,7 @@ export const SeeingSoundsAnalysis: React.FC = () => {
         </div>
       </header>
 
-      <main className='analysis-main'>
+      <div className='analysis-main'>
         <div className='perspective-sidebar'>
           <div className='sidebar-label'>Perspective</div>
           <h3 className='active-module-title'>{activeModule.title}</h3>
@@ -96,7 +97,7 @@ export const SeeingSoundsAnalysis: React.FC = () => {
         <div className='visualizer-container'>
           <activeModule.Component data={report} audioRef={audioRef}/>
         </div>
-      </main>
+      </div>
 
       <footer className='analysis-footer'>
         <AudioPlayer src={report.audio_url} duration={report.duration} audioRef={audioRef} onTimeUpdate={handleSync} />
@@ -108,8 +109,8 @@ export const SeeingSoundsAnalysis: React.FC = () => {
 const styles = {
   dashboardRoot: {
     display: 'flex',
+    flex: 1,
     flexDirection: 'column' as const,
-    height: '100%',
     gap: '20px',
     color: '#fff',
   },

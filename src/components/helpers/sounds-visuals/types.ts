@@ -20,7 +20,7 @@ export const modules: VisualizerModule[] = [
     id: 'phase-space',
     title: 'Real-Time Chord Wheel',
     description:
-    'A live 3D visualization that lights up the “current” chord as the audio plays. The chord labels come from a "estimated guess" (not ground truth), so expect misses and weird calls.',
+    'A live 3D visualization that lights up the “current” chord as the audio plays. The chord labels come from an "estimated guess" (not ground truth), so expect misses and weird calls.',
     Component: ChordWheel
   },
   { 
