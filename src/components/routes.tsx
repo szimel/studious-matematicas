@@ -1,15 +1,15 @@
 import React from 'react';
 import '../css/routes.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { SetTheory } from './screens/SetTheory';
+import { SetTheory } from './screens/set-theory/SetTheory';
 import { Header } from './main type shi/Header';
-import { Tutorial } from './screens/tutorial';
+import { Tutorial } from './screens/set-theory/tutorial';
 import { AnimatedRoute } from './helpers/animatedRoute';
 import { AppContextProvider } from './main type shi/Context';
 import { KamTest } from './screens/Kamkam';
 import { TaeExample } from './screens/matea/[id]';
-import { SeeingSounds } from './screens/SeeingSounds';
-import { SeeingSoundsAnalysis } from './screens/Analysis';
+import { SeeingSounds } from './screens/seeing-sounds/SeeingSounds';
+import { SeeingSoundsAnalysis } from './screens/seeing-sounds/Analysis';
 
 const AppRoutes: React.FC = () => (
   <div className="routes-container">

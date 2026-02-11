@@ -1,29 +1,31 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 
 interface PlayerProps {
   src: string;
 	duration: number;
+	audioRef: React.RefObject<HTMLAudioElement>;
+  // eslint-disable-next-line no-unused-vars
   onTimeUpdate: (time: number) => void;
 }
 
-export const AudioPlayer: React.FC<PlayerProps> = ({ src, duration,onTimeUpdate }) => {
-  const audioRef = useRef<HTMLAudioElement>(null);
+export const AudioPlayer: React.FC<PlayerProps> = ({ src, duration, audioRef, onTimeUpdate }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const togglePlay = () => {
-    if (isPlaying) {audioRef.current?.pause();}
-    else {audioRef.current?.play();}
+    const a = audioRef.current;
+    if (!a) {return;}
+    if (isPlaying) {a.pause();}
+    else {a.play();}
     setIsPlaying(!isPlaying);
   };
 
   const handleUpdate = () => {
-    if (audioRef.current) {
-      const current = audioRef.current.currentTime;
-      const duration = audioRef.current.duration;
-      setProgress((current / duration) * 100);
-      onTimeUpdate(current); // This sends the time back to the 3D visuals
-    }
+    const a = audioRef.current;
+    if (!a || !Number.isFinite(a.duration) || a.duration <= 0) {return;}
+
+    setProgress((a.currentTime / a.duration) * 100);
+    onTimeUpdate?.(a.currentTime);
   };
 
   const seek = (e: React.MouseEvent<HTMLDivElement>) => {

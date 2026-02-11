@@ -1,11 +1,11 @@
 import React from 'react';
 import { PlaceholderPhaseSpace, PlaceholderSpectrogram } from './test';
-import { SherlockReport } from '../../screens/Analysis';
-import { ChordWheel } from './threejs-components/ChordWheel';
+import { SherlockReport } from '../../screens/seeing-sounds/Analysis';
+import { ChordWheel } from './components/ChordWheel';
 
 export interface ComponentProps {
 	data: SherlockReport,
-	currentFrame: number
+	audioRef: React.RefObject<HTMLAudioElement>;
 }
 
 interface VisualizerModule {
@@ -16,10 +16,11 @@ interface VisualizerModule {
 }
 
 export const modules: VisualizerModule[] = [
-  { 
-    id: 'phase-space', 
-    title: 'Phase Space Reconstruction', 
-    description: 'Mapping the raw signal against its own time-delay to reveal chaotic attractors.',
+  {
+    id: 'phase-space',
+    title: 'Real-Time Chord Wheel',
+    description:
+    'A live 3D visualization that lights up the “current” chord as the audio plays. The chord labels come from a "estimated guess" (not ground truth), so expect misses and weird calls.',
     Component: ChordWheel
   },
   { 

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import '../../css/set-theory.css';
-import '../../css/sound-analysis.css';
+import React, { useRef, useState } from 'react';
+import '../../../css/set-theory.css';
+import '../../../css/sound-analysis.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AudioPlayer } from '../helpers/sounds-visuals/AudioPlayer';
-import { modules } from '../helpers/sounds-visuals/types';
+import { AudioPlayer } from '../../helpers/sounds-visuals/AudioPlayer';
+import { modules } from '../../helpers/sounds-visuals/types';
 
 type ChordSegment = {
   start: number;
@@ -26,6 +26,7 @@ export interface SherlockReport {
 export const SeeingSoundsAnalysis: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const [currentFrame, setCurrentFrame] = useState(0);
   const [activeModuleIndex, setActiveModuleIndex] = useState(0);
@@ -39,7 +40,6 @@ export const SeeingSoundsAnalysis: React.FC = () => {
     navigate('/seeing-sounds');
     return null;
   }
-  console.log(report);
   // time passed from audio player
   const handleSync = (time: number) => {
     const frame = Math.floor(time * report.fps);
@@ -94,12 +94,12 @@ export const SeeingSoundsAnalysis: React.FC = () => {
         </div>
 
         <div className='visualizer-container'>
-          <activeModule.Component data={report} currentFrame={currentFrame} />
+          <activeModule.Component data={report} audioRef={audioRef}/>
         </div>
       </main>
 
       <footer className='analysis-footer'>
-        <AudioPlayer src={report.audio_url} duration={report.duration} onTimeUpdate={handleSync} />
+        <AudioPlayer src={report.audio_url} duration={report.duration} audioRef={audioRef} onTimeUpdate={handleSync} />
       </footer>
     </div>
   );

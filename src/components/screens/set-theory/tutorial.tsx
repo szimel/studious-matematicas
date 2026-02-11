@@ -1,14 +1,14 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
-import '../../css/set-theory.css';
-import { SMText } from '../custom/Text';
+import '../../../css/set-theory.css';
+import { SMText } from '../../custom/Text';
 import { useNavigate } from 'react-router-dom';
-import BouncyText from '../custom/BouncyText';
-import { CircleItem } from '../custom/AnimatedCircle';
-import { AnimateCircles } from '../helpers/set-theory/VennDiagram';
+import BouncyText from '../../custom/BouncyText';
+import { CircleItem } from '../../custom/AnimatedCircle';
+import { AnimateCircles } from '../../helpers/set-theory/VennDiagram';
 import Tippy from '@tippyjs/react';
-import { AppContext } from '../main type shi/Context';
-import { SMButton } from '../custom/Button';
+import { AppContext } from '../../main type shi/Context';
+import { SMButton } from '../../custom/Button';
 
 export const Tutorial: React.FC = () => {
   const { updateVennData, tippyVisible, setTippyVisible } = React.useContext(AppContext);// for tippy visibility and setting venn diagram

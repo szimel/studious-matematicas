@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../css/set-theory.css';
+import '../../../css/set-theory.css';
 import { useNavigate } from 'react-router-dom';
 
 // TODO: 
