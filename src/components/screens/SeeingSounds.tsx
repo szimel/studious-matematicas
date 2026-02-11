@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import '../../css/set-theory.css';
+import { useNavigate } from 'react-router-dom';
 
 // TODO: 
 // setup railway for python backend api
 
 export const SeeingSounds: React.FC = () => {
+  const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
 
@@ -26,6 +28,7 @@ export const SeeingSounds: React.FC = () => {
     // 2. Prepare the "Evidence" (FormData)
     const formData = new FormData();
     formData.append('file', file); 
+    const audioUrl = URL.createObjectURL(file);
 
     try {
     // 3. Send to the Python Engine
@@ -37,13 +40,15 @@ export const SeeingSounds: React.FC = () => {
       if (!response.ok) {throw new Error('Network response was not ok');}
 
       const analysisResult = await response.json();
-      console.log('Sherlock\'s Report:', analysisResult);
 
       // 4. Temporary success feedback
       setLoadingMessage('Analysis Complete!');
       setTimeout(() => {
         setIsProcessing(false);
-      // We will handle the navigation to the carousel here later
+				
+        navigate('/seeing-sounds/analysis', { 
+          state: { ...analysisResult, audio_url: audioUrl } 
+        });
       }, 1500);
 
     } catch (error) {

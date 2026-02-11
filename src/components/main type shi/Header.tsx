@@ -29,7 +29,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <div style={ styles.container }>
+    <div className='main-header-container'>
       {/* 3. Apply the key here to force a reset every 30s */}
       <div className='logo' key={animationTrigger}>
         <SMText id='pi-7' type='header'>π</SMText>
@@ -65,25 +65,3 @@ export const Header: React.FC = () => {
     </div>
   );
 };
-
-const styles = {
-  container: {
-    display: 'flex',
-    height: 60,
-    padding: '10px 20px',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  dropdown: {
-    width: 200,
-    height: 'auto',
-    backgroundColor: '#eee',
-    borderRadius: 15,
-    padding: 15,
-  },
-  headerImage: {
-    height: 60,
-    width: 60,
-    marginRight: 10,
-  },
-} as const; 

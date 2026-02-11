@@ -31,6 +31,7 @@ export const AnimatedRoute: React.FC<AnimatedRouteProps> = ({ children }) => {
 
   return (
     <motion.div
+      style={{ display: 'contents' }}
       key={location.pathname}
       initial={pageVariants.initial}
       animate={pageVariants.in}

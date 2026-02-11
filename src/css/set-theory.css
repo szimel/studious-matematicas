@@ -3,8 +3,6 @@
   flex-direction: column; /* Stack children vertically */
   border-radius: 15px;
   background-color: rgb(33, 34, 37);
-  flex-grow: 1;
-  flex: 1;
   padding: 35px;
   max-width: 100%;
 }
@@ -77,8 +75,8 @@
 @media screen and (max-width: 450px) {
   .st-container {
     max-width: 100%;
-    padding: 20px 10px;
-    margin-top: 50px;
+    padding: 10px 10px;
+    margin-top: 20px;
   }
 
   .inputButtonContainer {

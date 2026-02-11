@@ -4,7 +4,7 @@ html, body {
   padding: 0;
   height: 100vh;
   width: 100%;
-  /* background-color: black; */
+  background-color: black;
 }
 
 /* Remove text being able to be selected */
@@ -33,12 +33,6 @@ html, body {
   border-bottom-color: #eee;
 }
 
-#root {
-  display: flex;
-  flex-direction: row; 
-  height: 100vh; 
-}
-
 svg text {
   font-family: "RobotoMono", Helvetica;
   font-size: 20px;
@@ -47,6 +41,12 @@ svg text {
 
 * {
   font-family: "RobotoMono", Helvetica;
+}
+
+/* let's route-container use flex:1 and set height to 100vh */
+#root {
+  display: flex;
+  height: 100vh;
 }
 
 .gradient-button {
