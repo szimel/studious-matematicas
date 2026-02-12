@@ -13,25 +13,48 @@ export const SeeingSounds: React.FC = () => {
   // Demo track configuration
   const demoTracks = [
     { id: 'piano', label: 'My favorite piano piece', icon: '🎹', name: 'Clair De Lune', file: '/audio/clair_de_lune.mp3' },
-    { id: 'synth', label: 'Zelda!', icon: '🎸', name: 'Fairy Fountain', file: '/audio/fairy_fountain.mp3' },
-    { id: 'ambient', label: 'Beatles!', icon: '🌊', name: 'Blackbird', file: '/audio/blackbird.mp3' }
+    { id: 'synth', label: 'Zelda!', icon: '🌊', name: 'Fairy Fountain', file: '/audio/fairy_fountain.mp3' },
+    { id: 'ambient', label: 'Beatles!', icon: '🎸', name: 'Blackbird', file: '/audio/blackbird.mp3' }
   ];
 
-  const sendToSherlock = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) {return;}
-
-    // 1. Show processing UI
-    setIsProcessing(true);
-    setLoadingMessage(`Analyzing "${file.name}"...`);
-
-    // 2. Prepare the "Evidence" (FormData)
-    const formData = new FormData();
-    formData.append('file', file); 
-    const audioUrl = URL.createObjectURL(file);
+  const sendToSherlock = async (input: File | React.ChangeEvent<HTMLInputElement> | typeof demoTracks[0]) => {
+    let file: File | Blob;
+    let fileName: string;
+    let audioUrl: string;
 
     try {
-    // 3. Send to the Python Engine
+      // Handle different input types
+      if (input instanceof File) {
+        // Direct File input
+        file = input;
+        fileName = input.name;
+        audioUrl = URL.createObjectURL(file);
+      } else if ('target' in input) {
+        // File input event
+        const uploadedFile = (input as React.ChangeEvent<HTMLInputElement>).target.files?.[0];
+        if (!uploadedFile) {return;}
+        file = uploadedFile;
+        fileName = uploadedFile.name;
+        audioUrl = URL.createObjectURL(file);
+      } else {
+        // Track object
+        const track = input as typeof demoTracks[0];
+        const response = await fetch(track.file);
+        const blob = await response.blob();
+        file = new File([blob], track.name, { type: blob.type });
+        fileName = track.name;
+        audioUrl = URL.createObjectURL(file);
+      }
+
+      // 1. Show processing UI
+      setIsProcessing(true);
+      setLoadingMessage(`Analyzing "${fileName}"...`);
+
+      // 2. Prepare the "Evidence" (FormData)
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // 3. Send to the Python Engine
       const response = await fetch('http://localhost:8000/analyze', {
         method: 'POST',
         body: formData,
@@ -45,44 +68,16 @@ export const SeeingSounds: React.FC = () => {
       setLoadingMessage('Analysis Complete!');
       setTimeout(() => {
         setIsProcessing(false);
-				
-        navigate('/seeing-sounds/analysis', { 
-          state: { ...analysisResult, audio_url: audioUrl } 
+        console.log(analysisResult);
+
+        navigate('/seeing-sounds/analysis', {
+          state: { ...analysisResult, audio_url: audioUrl }
         });
       }, 1500);
 
     } catch (error) {
       console.error('The investigation failed:', error);
       setLoadingMessage('Investigation failed. Check the console.');
-      setIsProcessing(false);
-    }
-  };
-
-
-  const handleDemoSelect = async (track: typeof demoTracks[0]) => {
-    setIsProcessing(true);
-    setLoadingMessage(`Analyzing "${track.name}"...`);
-
-    try {
-      // 1. Fetch the audio file (Lazy Loading)
-      const response = await fetch(track.file);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-
-      // 2. Here is where you'd eventually fetch your pre-computed JSON
-      // const jsonResponse = await fetch(`/data/${track.id}.json`);
-      // const data = await jsonResponse.json();
-
-      console.log('Audio Loaded & Ready:', url);
-      
-      // Simulate the "Thinking" time of the algorithm for now
-      setTimeout(() => {
-        setIsProcessing(false);
-        // transitionToCarousel(url, data);
-      }, 2000);
-
-    } catch (error) {
-      console.error('Failed to load demo:', error);
       setIsProcessing(false);
     }
   };
@@ -134,7 +129,7 @@ export const SeeingSounds: React.FC = () => {
           {demoTracks.map(track => (
             <button
               key={track.id}
-              onClick={() => handleDemoSelect(track)}
+              onClick={() => sendToSherlock(track)}
               style={styles.demoButton}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#3d3e42')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#2d2e32')}

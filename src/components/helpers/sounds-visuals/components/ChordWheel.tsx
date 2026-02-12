@@ -202,7 +202,7 @@ export const ChordWheel = ({ data, audioRef }: ComponentProps): JSX.Element => {
 
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
-      <Canvas style={{ position: 'absolute', inset: 0, backgroundColor: '#c4c3c3' }} dpr={[1, 2]} shadows frameloop='demand'>
+      <Canvas style={{ position: 'absolute', inset: 0, backgroundColor: '#ffffff' }} dpr={[1, 2]} shadows frameloop='demand'>
         <ChordSync segments={data.c_chord_segments} audioRef={audioRef} activeChordRef={activeChordRef} />
         <PerspectiveCamera makeDefault position={[0, 4.8, 5.2]} fov={45} near={0.1} far={100} />
         <ChordWedge segments={data.c_chord_segments} activeChordRef={activeChordRef} />
