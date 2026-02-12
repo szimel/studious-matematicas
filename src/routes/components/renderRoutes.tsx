@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { SMText } from '../custom/Text';
+import { SMText } from '../../components/Text';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
-import BouncyText from '../custom/BouncyText';
-import { items, SideBarItem } from '../main type shi/Context';
+import BouncyText from '../../components/BouncyText';
+import { items, SideBarItem } from '../../context/Context';
 
 export const Routes: React.FC = () => {
   if (!items) {return null;}

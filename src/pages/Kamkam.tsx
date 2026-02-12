@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../css/kamkam.css';
+import '../css/kamkam.css';
 
 // super complicated code I painstakingly spent hours writing
 export const KamTest: React.FC = () => {

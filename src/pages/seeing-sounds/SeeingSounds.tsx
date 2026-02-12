@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import '../../../css/set-theory.css';
+import '../../css/set-theory.css';
 import { useNavigate } from 'react-router-dom';
+import { API_CONFIG } from '../../utils/apiConfig';
 
 // TODO: 
 // setup railway for python backend api
@@ -55,6 +56,14 @@ export const SeeingSounds: React.FC = () => {
       formData.append('file', file);
 
       // 3. Send to the Python Engine
+      // const response = await fetch(`${API_CONFIG.BASE_URL}/analyze`, {
+      //   method: 'POST',
+      //   headers: {
+      //   // This MUST match the header your FastAPI backend expects
+      //     'x-api-key': API_CONFIG.API_KEY,
+      //   },
+      //   body: formData,
+      // });
       const response = await fetch('http://localhost:8000/analyze', {
         method: 'POST',
         body: formData,

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'; // Added hooks
-import { SMText } from '../custom/Text';
+import { SMText } from './Text';
 import Tippy, { tippy } from '@tippyjs/react';
-import '../../css/header.css';
+import '../css/header.css';
 import 'tippy.js/animations/scale.css';
-import { Routes } from '../helpers/renderRoutes';
+import { Routes } from '../routes/components/renderRoutes';
 
 export const Header: React.FC = () => {
   // 1. Create a state to track animation cycles
@@ -46,7 +46,7 @@ export const Header: React.FC = () => {
           hideOnClick={true}
         >
           <img 
-            src='./icon-code.svg' 
+            src='/icon-code.svg' 
             alt="Code icon" 
             height={40} 
             width={40} 

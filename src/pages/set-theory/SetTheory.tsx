@@ -1,13 +1,13 @@
 import React from 'react';
-import '../../../css/set-theory.css';
-import { Input } from '../../helpers/set-theory/input';
-import { AnimateCircles } from '../../helpers/set-theory/VennDiagram';
+import '../../css/set-theory.css';
+import { Input } from '../../features/set-theory/input';
+import { AnimateCircles } from '../../features/set-theory/VennDiagram';
 import { 
-  SolutionType } from '../../helpers/set-theory/useVennDiagramHighlighter';
+  SolutionType } from '../../features/set-theory/useVennDiagramHighlighter';
 import tippy from 'tippy.js';
 import { useNavigate } from 'react-router-dom';
-import BouncyText from '../../custom/BouncyText';
-import { AppContext } from '../../main type shi/Context';
+import BouncyText from '../../components/BouncyText';
+import { AppContext } from '../../context/Context';
 
 export type VennStateType = {
   solution: SolutionType;

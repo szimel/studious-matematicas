@@ -2,8 +2,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { VennDiagram } from '@upsetjs/venn.js';
-import { SMText } from '../../custom/Text';
-import { AppContext } from '../../main type shi/Context';
+import { SMText } from '../../components/Text';
+import { AppContext } from '../../context/Context';
 
 const colors = [
   '#eaac8b',

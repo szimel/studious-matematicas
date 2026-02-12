@@ -1,6 +1,6 @@
 import React from 'react';
 import { PlaceholderPhaseSpace, PlaceholderSpectrogram } from './test';
-import { SherlockReport } from '../../screens/seeing-sounds/Analysis';
+import { SherlockReport } from '../../pages/seeing-sounds/Analysis';
 import { ChordWheel } from './components/ChordWheel';
 
 export interface ComponentProps {

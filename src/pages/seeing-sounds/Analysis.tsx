@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
-import '../../../css/set-theory.css';
-import '../../../css/sound-analysis.css';
+import '../../css/set-theory.css';
+import '../../css/sound-analysis.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AudioPlayer } from '../../helpers/sounds-visuals/AudioPlayer';
-import { modules } from '../../helpers/sounds-visuals/types';
+import { AudioPlayer } from '../../features/sounds-visuals/AudioPlayer';
+import { modules } from '../../features/sounds-visuals/types';
 
 type ChordSegment = {
   start: number;

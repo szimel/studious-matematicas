@@ -1,8 +1,8 @@
 import React from 'react';
-import { AppContext } from '../../main type shi/Context';
-import { SMButton } from '../../custom/Button';
-import { SMText } from '../../custom/Text';
+import { SMButton } from '../../components/Button';
+import { SMText } from '../../components/Text';
 import Tippy from '@tippyjs/react';
+import { AppContext } from '../../context/Context';
 
 const buttonData = [
   { text: 'A', bgColor: '#355070' },

@@ -1,11 +1,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useState, createContext } from 'react';
-import { VennStateType } from '../screens/set-theory/SetTheory';
-import { 
-  SolutionType, 
-  useVennDiagramHighlighter 
-} from '../helpers/set-theory/useVennDiagramHighlighter';
+import { VennStateType } from '../pages/set-theory/SetTheory';
+import { SolutionType, useVennDiagramHighlighter } from '../features/set-theory/useVennDiagramHighlighter';
 
 interface AppContextProviderProps {
   children: React.ReactNode;
