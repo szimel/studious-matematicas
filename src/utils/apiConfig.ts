@@ -1,7 +1,7 @@
-// const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production';
 
 // TODO: REMOVE THIS
-const isProd = true;
+// const isProd = true;
 
 
 export const API_CONFIG = {

@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AudioPlayer } from '../../features/sounds-visuals/AudioPlayer';
 import { modules } from '../../features/sounds-visuals/types';
 
+// TODO: error screen using <LoadingUI> when no response file OR track file
+
 type ChordSegment = {
   start: number;
   end: number;
@@ -28,7 +30,7 @@ export const SeeingSoundsAnalysis: React.FC = () => {
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const [currentFrame, setCurrentFrame] = useState(0);
+  const [, setCurrentFrame] = useState(0);
   const [activeModuleIndex, setActiveModuleIndex] = useState(0);
   const activeModule = modules[activeModuleIndex];
   

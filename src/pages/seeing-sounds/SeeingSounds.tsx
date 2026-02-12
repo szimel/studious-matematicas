@@ -1,93 +1,84 @@
 import React, { useState } from 'react';
 import '../../css/set-theory.css';
 import { useNavigate } from 'react-router-dom';
-import { API_CONFIG } from '../../utils/apiConfig';
+import { LoadingUI } from '../../components/LoadingUI';
+import { getParsedData } from '../../utils/sherlockApi';
 
-// TODO: 
-// setup railway for python backend api
+// Demo track configuration
+type DemoTrack = {
+	id: string
+	label: string
+	icon: string
+	name: string
+	file: string
+}
+
+const demoTracks: DemoTrack[] = [
+  { id: 'piano', label: 'My favorite piano piece', icon: '🎹', name: 'Clair De Lune', file: '/audio/clair_de_lune.mp3' },
+  { id: 'synth', label: 'Zelda!', icon: '🌊', name: 'Fairy Fountain', file: '/audio/fairy_fountain.mp3' },
+  { id: 'ambient', label: 'Beatles!', icon: '🎸', name: 'Blackbird', file: '/audio/blackbird.mp3' }
+];
+
+type FileInputProps = React.ChangeEvent<HTMLInputElement> | typeof demoTracks[0];
 
 export const SeeingSounds: React.FC = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
 
-  // Demo track configuration
-  const demoTracks = [
-    { id: 'piano', label: 'My favorite piano piece', icon: '🎹', name: 'Clair De Lune', file: '/audio/clair_de_lune.mp3' },
-    { id: 'synth', label: 'Zelda!', icon: '🌊', name: 'Fairy Fountain', file: '/audio/fairy_fountain.mp3' },
-    { id: 'ambient', label: 'Beatles!', icon: '🎸', name: 'Blackbird', file: '/audio/blackbird.mp3' }
-  ];
 
-  const sendToSherlock = async (input: File | React.ChangeEvent<HTMLInputElement> | typeof demoTracks[0]) => {
-    let file: File | Blob;
-    let fileName: string;
-    let audioUrl: string;
+  // Helper to turn any input (File, Event, or Track) into a standard File object
+  const prepareAudioFile = async (input: FileInputProps): Promise<{ file: File; url: string }> => {
+  // 1. Logic for File Upload Event
+    if ('target' in input) {
+      const uploadedFile = input.target.files?.[0];
+      if (!uploadedFile) {throw new Error('No file selected');}
+      return { 
+        file: uploadedFile, 
+        url: URL.createObjectURL(uploadedFile) 
+      };
+    }
 
+    // 2. Logic for Demo Track (Objects in demoTracks array)
+    // We fetch the local file path and convert it to a File object for the API
+    const response = await fetch(input.file);
+    const blob = await response.blob();
+    const file = new File([blob], input.name, { type: blob.type });
+  
+    return { 
+      file, 
+      url: URL.createObjectURL(file) 
+    };
+  };
+
+  const sendToSherlock = async (input: FileInputProps) => {
     try {
-      // Handle different input types
-      if (input instanceof File) {
-        // Direct File input
-        file = input;
-        fileName = input.name;
-        audioUrl = URL.createObjectURL(file);
-      } else if ('target' in input) {
-        // File input event
-        const uploadedFile = (input as React.ChangeEvent<HTMLInputElement>).target.files?.[0];
-        if (!uploadedFile) {return;}
-        file = uploadedFile;
-        fileName = uploadedFile.name;
-        audioUrl = URL.createObjectURL(file);
-      } else {
-        // Track object
-        const track = input as typeof demoTracks[0];
-        const response = await fetch(track.file);
-        const blob = await response.blob();
-        file = new File([blob], track.name, { type: blob.type });
-        fileName = track.name;
-        audioUrl = URL.createObjectURL(file);
-      }
-
-      // 1. Show processing UI
+    // 1. Normalize Input
+      const { file, url } = await prepareAudioFile(input);
+    
+      // 2. UI Feedback
       setIsProcessing(true);
-      setLoadingMessage(`Analyzing "${fileName}"...`);
+      setLoadingMessage(`Analyzing "${file.name}"...`);
 
-      // 2. Prepare the "Evidence" (FormData)
+      // 3. API Call
       const formData = new FormData();
       formData.append('file', file);
+      const result = await getParsedData(formData);
 
-      // 3. Send to the Python Engine
-      // const response = await fetch(`${API_CONFIG.BASE_URL}/analyze`, {
-      //   method: 'POST',
-      //   headers: {
-      //   // This MUST match the header your FastAPI backend expects
-      //     'x-api-key': API_CONFIG.API_KEY,
-      //   },
-      //   body: formData,
-      // });
-      const response = await fetch('http://localhost:8000/analyze', {
-        method: 'POST',
-        body: formData,
-      });
+      if (result.error) {throw new Error(result.error);}
 
-      if (!response.ok) {throw new Error('Network response was not ok');}
-
-      const analysisResult = await response.json();
-
-      // 4. Temporary success feedback
+      // 4. Success Transition
       setLoadingMessage('Analysis Complete!');
       setTimeout(() => {
         setIsProcessing(false);
-        console.log(analysisResult);
-
-        navigate('/seeing-sounds/analysis', {
-          state: { ...analysisResult, audio_url: audioUrl }
-        });
+        navigate('/seeing-sounds/analysis', { state: { ...result, audio_url: url } });
       }, 1500);
 
-    } catch (error) {
-      console.error('The investigation failed:', error);
-      setLoadingMessage('Investigation failed. Check the console.');
-      setIsProcessing(false);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+  
+      setLoadingMessage(`Error: ${errorMessage}`);
+      setTimeout(() => setIsProcessing(false), 3000);
     }
   };
 
@@ -97,21 +88,15 @@ export const SeeingSounds: React.FC = () => {
 
   return (
     <div className='st-container' style={{ position: 'relative' }}>
-      
+
       {/* --- Loading Overlay --- */}
-      {isProcessing && (
-        <div style={styles.loadingOverlay}>
-          <div className="loader-spinner" style={styles.spinner}></div>
-          <p style={styles.loadingText}>{loadingMessage}</p>
-        </div>
-      )}
+      <LoadingUI loading={isProcessing} displayText={loadingMessage} />
 
       {/* Landing Page Header Section */}
       <div style={styles.headerSection}>
         <h1 style={styles.mainTitle}>1D-to-3D Audio Analysis</h1>
         <p style={styles.description}>
           Welcome to a project designed to peel back the layers of sound. Using 
-          <span style={styles.highlight} onClick={() => wikiClick('Fast_Fourier_transform')}> Fast Fourier Transform (FFT)</span>,
           <span style={styles.highlight} onClick={() => wikiClick('Constant-Q_transform')}> Constant-Q Transforms (CQT)</span>, and 
           <span style={styles.highlight} onClick={() => wikiClick('Music_Source_Separation')}> Harmonic-Percussive Source Separation (HPSS)</span>, 
           raw audio data is decomposed into its constituent base frequency... which is a lot of jargon.
@@ -132,8 +117,8 @@ export const SeeingSounds: React.FC = () => {
           />
         </label>
 
+        {/* Demo songs */}
         <p style={styles.subtext}>Or try a pre-loaded analysis:</p>
-
         <div style={styles.demoGrid}>
           {demoTracks.map(track => (
             <button
@@ -152,20 +137,11 @@ export const SeeingSounds: React.FC = () => {
           ))}
         </div>
       </div>
-
-      {/* Logic for the spinner animation (usually put in global CSS, but here for completeness) */}
-      <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 };
 
 const styles = {
-  // ... existing styles ...
   headerSection: {
     display: 'flex',
     flexDirection: 'column' as const,
@@ -235,26 +211,6 @@ const styles = {
     alignItems: 'center',
     gap: '12px',
     transition: 'all 0.2s ease',
-  },
-  loadingOverlay: {
-    position: 'absolute' as const,
-    top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(33, 34, 37, 0.9)',
-    zIndex: 100,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '15px',
-  },
-  spinner: {
-    width: '50px',
-    height: '50px',
-    border: '5px solid #333',
-    borderTop: '5px solid #4A90E2',
-    borderRadius: '50%',
-    animation: 'spin 1s linear infinite',
-    marginBottom: '20px',
   },
   loadingText: {
     color: '#fff',
