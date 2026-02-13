@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useRef, useState } from 'react';
-import { Html, OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { ComponentProps } from '../types';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';

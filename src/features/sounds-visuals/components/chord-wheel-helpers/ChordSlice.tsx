@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 import React from 'react';
-import { MeshPhysicalMaterialProps, MeshStandardMaterialProps, ThreeEvent, useFrame } from '@react-three/fiber';
-import { useCallback, useMemo, useRef } from 'react';
+import { MeshPhysicalMaterialProps, MeshStandardMaterialProps, ThreeEvent } from '@react-three/fiber';
+import { useCallback, useMemo } from 'react';
 import { Center, Text3D } from '@react-three/drei';
 import { ChordKey, ChordMap, OverlayState } from '../ChordWheel';
 import * as THREE from 'three';
@@ -84,7 +84,6 @@ function colorForIndex(index: number, name: ChordKey) {
 export function ChordSlice({
   index,
   chord,
-  activeChordRef,
   rInner,
   rOuter,
   chordMap,
