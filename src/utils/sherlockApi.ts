@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { API_CONFIG } from './apiConfig';
 
 export async function getParsedData(formData: FormData) {
