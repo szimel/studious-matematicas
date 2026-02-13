@@ -3,7 +3,7 @@ import '../../css/set-theory.css';
 import '../../css/sound-analysis.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AudioPlayer } from '../../features/sounds-visuals/AudioPlayer';
-import { modules } from '../../features/sounds-visuals/types';
+import { modules } from '../../types/types';
 
 // TODO: error screen using <LoadingUI> when no response file OR track file
 

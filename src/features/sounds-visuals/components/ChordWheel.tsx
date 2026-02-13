@@ -2,13 +2,13 @@
 import React, { useRef, useState } from 'react';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { ComponentProps } from '../types';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { ChordSlice } from './chord-wheel-helpers/ChordSlice';
 import { ChordSync } from './chord-wheel-helpers/ChordSync';
 import { CenterHUD } from './chord-wheel-helpers/CenterHUD';
 import { Color } from 'three';
 import * as THREE from 'three';
+import { ComponentProps } from '../../../types/types';
 
 const OUTER = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'] as const;
 const INNER = ['Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m', 'Fm', 'Cm', 'Gm', 'Dm'] as const;

@@ -233,7 +233,7 @@ export function ChordSlice({
               position={[-.005, -.015, 0]}
             >
               {slice.name}
-              <meshBasicMaterial color={'#e0dddd'} />
+              <meshBasicMaterial color={'#d0cfcf'} />
             </Text3D>
 
             {/* actual text */}
