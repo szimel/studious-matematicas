@@ -6,6 +6,9 @@ import { ComponentProps } from '../types';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { ChordSlice } from './chord-wheel-helpers/ChordSlice';
 import { ChordSync } from './chord-wheel-helpers/ChordSync';
+import { CenterHUD } from './chord-wheel-helpers/CenterHUD';
+import { Color } from 'three';
+import * as THREE from 'three';
 
 const OUTER = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'] as const;
 const INNER = ['Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m', 'Fm', 'Cm', 'Gm', 'Dm'] as const;
@@ -40,6 +43,7 @@ export type OverlayState = {
   count: number;
   pct: string;
   seconds: string;
+	color: Color
 };
 
 /**
@@ -97,7 +101,8 @@ const ChordWedge = ({ segments, activeChordRef }: {
     count: best.count, 
     pct: best.pctDisplay, 
     seconds: best.time, 
-    display: best.name 
+    display: best.name,
+    color: new THREE.Color(1,1,1)
   } satisfies OverlayState;
   const [overlay, setOverlay] = useState<OverlayState>(initial);
 
@@ -149,7 +154,20 @@ const ChordWedge = ({ segments, activeChordRef }: {
         />
       ))}
 
-      <Html fullscreen style={{ pointerEvents: 'none' }}>
+      <CenterHUD 
+        overlay={overlay}
+        radius={rHole}
+      />
+
+      {/* <CenterHud
+        overlay={overlay}
+        chordMap={chordMap}
+        segmentsCount={segments.length}
+        activeChordRef={activeChordRef}
+        rHole={0.85}
+      /> */}
+
+      {/* <Html fullscreen style={{ pointerEvents: 'none' }}>
         <div style={{ position: 'absolute', left: '50%', top: 12, transform: 'translateX(-50%)', width: 'min(340px, 92vw)' }}>
           <div
             style={{
@@ -178,7 +196,7 @@ const ChordWedge = ({ segments, activeChordRef }: {
             </div>
           </div>
         </div>
-      </Html>
+      </Html> */}
 
       <OrbitControls
         enablePan={false}
@@ -208,10 +226,10 @@ export const ChordWheel = ({ data, audioRef }: ComponentProps): JSX.Element => {
         <ChordWedge segments={data.c_chord_segments} activeChordRef={activeChordRef} />
         <EffectComposer>
           <Bloom
-            intensity={1.2}
-            luminanceThreshold={.9}
-            luminanceSmoothing={.9}
-            radius={.05}
+            intensity={2.5}
+            luminanceThreshold={.5}
+            luminanceSmoothing={1}
+            radius={.3}
             mipmapBlur
           />
         </EffectComposer>

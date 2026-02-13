@@ -124,6 +124,7 @@ export function ChordSlice({
         count: slice.count,
         pct: slice.pctDisplay,
         seconds: slice.time,
+        color: baseColor.clone(),
       });
     },
     [chordMap, setOverlay]
@@ -137,6 +138,7 @@ export function ChordSlice({
         count: slice.count,
         pct: slice.pctDisplay,
         seconds: slice.time,
+        color: baseColor.clone()
       });
       document.body.style.cursor = 'pointer';
     },
@@ -164,40 +166,39 @@ export function ChordSlice({
 
   // super transparent material, glass like, but with a subtle glow of the chord color, for meshPhysicalMaterial
   const glassPropsPhysical = useMemo(() => ({
-    color: baseColor.clone().multiplyScalar(1.9),
+    color: baseColor.clone().multiplyScalar(1.4),
     transparent: true,
-    opacity: 0.35,
+    opacity: 0.45,
     transmission: 1, // Make it look more like glass
-    emissive: baseColor,
-    emissiveIntensity: .2,
     toneMapped: false,  
+    ior: 1,
   } satisfies MeshPhysicalMaterialProps), [baseColor]);
 
-  // track last active value so we only write when it changes
-  const lastActiveRef = useRef<ChordKey | null>(null);
-  const wireMatRef = useRef<THREE.MeshPhysicalMaterial>(null);
-  const glassMatRef = useRef<THREE.MeshPhysicalMaterial>(null);
-  useFrame(() => {
-    const active = activeChordRef.current;
+  // // track last active value so we only write when it changes
+  // const lastActiveRef = useRef<ChordKey | null>(null);
+  // const wireMatRef = useRef<THREE.MeshPhysicalMaterial>(null);
+  // const glassMatRef = useRef<THREE.MeshPhysicalMaterial>(null);
+  // useFrame(() => {
+  //   const active = activeChordRef.current;
 
-    // only update when it changes
-    if (active !== chord && lastActiveRef.current !== chord) {return;}
+  //   // only update when it changes
+  //   if (active !== chord && lastActiveRef.current !== chord) {return;}
 
-    lastActiveRef.current = active;
-    const isActive = active === chord;
-    const w = wireMatRef.current;
-    const g = glassMatRef.current;
+  //   lastActiveRef.current = active;
+  //   const isActive = active === chord;
+  //   const w = wireMatRef.current;
+  //   const g = glassMatRef.current;
 
-    if (!w || !g) {return;}
-    // drive bloom: hot emissive + toneMapped false
-    for (const mat of [w, g]) {
-      mat.toneMapped = false;
-      mat.emissive.copy(baseColor);
-      // mat.emissiveIntensity = isActive ? 2.5 : 0.2;
-    }
-    w.emissiveIntensity = isActive ? 3.5 : 0.2;
-    g.emissiveIntensity = isActive ? 2.5 : 0.2;
-  });
+  //   if (!w || !g) {return;}
+  //   // drive bloom: hot emissive + toneMapped false
+  //   for (const mat of [w, g]) {
+  //     mat.toneMapped = false;
+  //     mat.emissive.copy(baseColor);
+  //     // mat.emissiveIntensity = isActive ? 2.5 : 0.2;
+  //   }
+  //   w.emissiveIntensity = isActive ? 3.5 : 0.2;
+  //   g.emissiveIntensity = isActive ? 2.5 : 0.2;
+  // });
 
   return (
     <group>
@@ -209,11 +210,13 @@ export function ChordSlice({
           castShadow
           receiveShadow
         >
-          <meshStandardMaterial attach="material" ref={wireMatRef} {... wireProps}/>
+          {/* <meshStandardMaterial attach="material" ref={wireMatRef} {... wireProps}/> */}
+          <meshStandardMaterial {... wireProps}/>
         </mesh>
 
         <mesh geometry={geometry} receiveShadow scale={.99}>
-          <meshPhysicalMaterial attach="material" ref={glassMatRef} {... glassPropsPhysical} />
+          {/* <meshPhysicalMaterial attach="material" ref={glassMatRef} {... glassPropsPhysical} /> */}
+          <meshPhysicalMaterial {... glassPropsPhysical} />
         </mesh>
       </group>
 
@@ -231,7 +234,7 @@ export function ChordSlice({
               position={[-.005, -.015, 0]}
             >
               {slice.name}
-              <meshStandardMaterial color={'white'} />
+              <meshBasicMaterial color={'#e0dddd'} />
             </Text3D>
 
             {/* actual text */}
