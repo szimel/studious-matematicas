@@ -9,7 +9,7 @@ export async function getParsedData(formData: FormData) {
     },
     body: formData,
   });
-  console.log(1, response);
+	
   if (!response.ok) {
     console.log(2, response);
     const errorBody = await response.json().catch(() => ({}));

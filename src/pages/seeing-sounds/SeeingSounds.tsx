@@ -19,55 +19,32 @@ const demoTracks: DemoTrack[] = [
   { id: 'ambient', label: 'Beatles!', icon: '🎸', name: 'Blackbird', file: '/audio/blackbird.mp3' }
 ];
 
-type FileInputProps = React.ChangeEvent<HTMLInputElement> | typeof demoTracks[0];
-
 export const SeeingSounds: React.FC = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
 
-
-  // Helper to turn any input (File, Event, or Track) into a standard File object
-  const prepareAudioFile = async (input: FileInputProps): Promise<{ file: File; url: string }> => {
-  // 1. Logic for File Upload Event
-    if ('target' in input) {
-      const uploadedFile = input.target.files?.[0];
-      if (!uploadedFile) {throw new Error('No file selected');}
-      return { 
-        file: uploadedFile, 
-        url: URL.createObjectURL(uploadedFile) 
-      };
-    }
-
-    // 2. Logic for Demo Track (Objects in demoTracks array)
-    // We fetch the local file path and convert it to a File object for the API
-    const response = await fetch(input.file);
-    const blob = await response.blob();
-    const file = new File([blob], input.name, { type: blob.type });
-  
-    return { 
-      file, 
-      url: URL.createObjectURL(file) 
-    };
-  };
-
-  const sendToSherlock = async (input: FileInputProps) => {
+  /**
+	 * Takes file input, saves it somewhere not very permanent, then passes it 
+	 * along to python api "sherlock". Navigates to /analysis, given success
+	 */
+  const sendToSherlock = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
-    // 1. Normalize Input
-      const { file, url } = await prepareAudioFile(input);
+      const file = e.target.files?.[0];
+      if (!file) {return;}
+
+      const url = URL.createObjectURL(file);
     
-      // 2. UI Feedback
       setIsProcessing(true);
       setLoadingMessage(`Analyzing "${file.name}"...`);
 
-      // 3. API Call
       const formData = new FormData();
       formData.append('file', file);
+      
       const result = await getParsedData(formData);
 
       if (result.error) {throw new Error(result.error);}
 
-      // 4. Success Transition
       setLoadingMessage('Analysis Complete!');
       setTimeout(() => {
         setIsProcessing(false);
@@ -76,9 +53,49 @@ export const SeeingSounds: React.FC = () => {
 
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-  
       setLoadingMessage(`Error: ${errorMessage}`);
       setTimeout(() => setIsProcessing(false), 3000);
+    }
+  };
+
+  /**
+	 * Fetches lazy loaded .mp3 and .json for corresponding demo track. Sends to /analysis,
+	 * given no errors. 
+	 */
+  const loadDemoData = async (track: DemoTrack) => {
+    try {
+      setIsProcessing(true);
+      setLoadingMessage(`Loading "${track.name}"...`);
+
+      // A. Create the Audio URL
+      const audioRes = await fetch(track.file);
+      const audioBlob = await audioRes.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      // B. Fetch the Pre-computed JSON
+      const jsonPath = track.file.replace('/audio/', '/json/').replace('.mp3', '.json');
+      
+      const jsonRes = await fetch(jsonPath);
+      if (!jsonRes.ok) {
+        throw new Error(`Could not find analysis file at ${jsonPath}`);
+      }
+      
+      // This is "lazy loading" — the data is only downloaded now!
+      const analysisData = await jsonRes.json();
+
+      // C. Transition
+      setLoadingMessage('Ready!');
+      setTimeout(() => {
+        setIsProcessing(false);
+        // Pass the fetched JSON + the audio URL to the next page
+        navigate('/seeing-sounds/analysis', { 
+          state: { ...analysisData, audio_url: audioUrl } 
+        });
+      }, 800); 
+
+    } catch (err) {
+      setLoadingMessage('Error loading demo file.');
+      setTimeout(() => setIsProcessing(false), 2500);
     }
   };
 
@@ -123,7 +140,7 @@ export const SeeingSounds: React.FC = () => {
           {demoTracks.map(track => (
             <button
               key={track.id}
-              onClick={() => sendToSherlock(track)}
+              onClick={() => loadDemoData(track)}
               style={styles.demoButton}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#3d3e42')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#2d2e32')}
