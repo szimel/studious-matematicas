@@ -138,15 +138,19 @@ export const SeeingSounds: React.FC = () => {
           Simply said: if the song is the criminal, then math is Sherlock Holmes: picking up and categorizing
           notes, like clues, that the music can&apos;t help but leave behind. 
         </p>
+        <p style={styles.description}>
+					Please note that this project doesn&apos;t yield perfect results - the math is powerful, but music is complex! File analysis also can take upwards of a minute. 
+					Lastly, I&apos;ve found it&apos;s easiest to use two devices, one to play a song, the other to record it and upload here.
+        </p>
       </div>
 
       {/* Action Section: Upload & Demos */}
       <div style={styles.actionContainer}>
         <label style={styles.uploadButton}>
-          Upload Audio Recording (.mp3, .wav)
+					Upload Audio Recording (.mp3, .m4a)
           <input 
             type="file" 
-            accept="audio/*" 
+            accept=".mp3,.m4a" 
             style={{ display: 'none' }} 
             onChange={(e) => sendToSherlock(e)}
           />

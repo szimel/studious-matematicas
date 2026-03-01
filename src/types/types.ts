@@ -20,7 +20,7 @@ export const modules: VisualizerModule[] = [
     id: 'phase-space',
     title: 'Chord Wheel',
     description:
-    'Guesses at what chord\'s and note\'s compromise a song. I am 70% sure it\'s 75% accurate. \n A cool patterns: The most played chord and note are almost always touching each other. Even if it\'s a minor chord.',
+    'Guesses at what chord\'s and note\'s compromise a song. I am 70% sure it\'s 75% accurate. \nNote that the chord wheel (the top component) puts chords that sound good together touching each other (Ex:, C sounds good with F, G, and Am). So, if you notice chords clumping together, the song is following music theory rules!',
     Component: SoundWheels
   },
   { 
