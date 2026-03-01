@@ -17,6 +17,8 @@ export interface SherlockReport {
   audio_url: string;
 	chord_segments: Array<DataSegment>
 	note_segments: Array<DataSegment>
+	/** Chromagram matrix from backend: shape (N_frames × 12 bins), values 0–255 */
+	spectrogram_data: number[][]
 }
 
 export const SeeingSoundsAnalysis: React.FC = () => {
