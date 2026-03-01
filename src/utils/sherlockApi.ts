@@ -18,3 +18,15 @@ export async function getParsedData(formData: FormData) {
 
   return response.json();
 }
+
+export const healthPing = async () => {
+  try {
+    await fetch(`${API_CONFIG.BASE_URL}/health`, {
+    });
+    
+    return true;
+  } catch (e) {
+    console.warn('Sherlock is still sleeping...');
+		
+  }
+};

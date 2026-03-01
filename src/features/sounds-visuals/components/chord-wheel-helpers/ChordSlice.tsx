@@ -1,26 +1,25 @@
 /* eslint-disable react/no-unknown-property */
 import React from 'react';
-import { MeshPhysicalMaterialProps, MeshStandardMaterialProps, ThreeEvent } from '@react-three/fiber';
+import { ThreeEvent } from '@react-three/fiber';
 import { useCallback, useMemo } from 'react';
 import { Center, Text3D } from '@react-three/drei';
-import { ChordKey, ChordMap, OverlayState } from '../ChordWheel';
+import { DataKey, DataMap, OverlayState } from '../../../../types/sound_data_types';
 import * as THREE from 'three';
 
 export type SliceProps = {
+	flag: boolean;
   index: number
-  chord: ChordKey
-	activeChordRef: React.MutableRefObject<ChordKey | null>;
+  chord: DataKey
   rInner: number
   rOuter: number
-  chordMap: ChordMap
+  dataMap: DataMap
   // eslint-disable-next-line no-unused-vars
   setOverlay: (o: OverlayState ) => void;
 }
 
-/**
- * Donut-slice shape in XY plane, extruded along +Z, then rotated so +Z becomes +Y.
- * Used to build individual chord wedges
- */
+/* ─── geometry helpers ──────────────────────────────────────── */
+
+/** Main wedge – annular sector extruded up into Y */
 function makeAnnularSectorGeometry(
   rOuter: number,
   rInner: number,
@@ -28,225 +27,274 @@ function makeAnnularSectorGeometry(
   theta1: number,
   height: number,
 ) {
-  const gap = 0.03; // gap between slices to visually separate them (vertically)
-  rOuter = rOuter - gap;
-  rInner = rInner + gap;
+  const gap = 0.04;
+  rOuter -= gap;
+  rInner += gap;
+
   const shape = new THREE.Shape();
-  const x0 = rOuter * Math.cos(theta0);
-  const y0 = rOuter * Math.sin(theta0);
-  shape.moveTo(x0, y0);
+  shape.moveTo(rOuter * Math.cos(theta0), rOuter * Math.sin(theta0));
   shape.absarc(0, 0, rOuter, theta0, theta1, false);
   shape.lineTo(rInner * Math.cos(theta1), rInner * Math.sin(theta1));
   shape.absarc(0, 0, rInner, theta1, theta0, true);
   shape.closePath();
 
-  const geom1 = new THREE.ExtrudeGeometry(shape, {
-    depth: height,
+  const depth = Math.max(0.0001, Math.abs(height));
+
+  const geom = new THREE.ExtrudeGeometry(shape, {
+    depth,
     bevelEnabled: true,
-    bevelThickness: 0.02,
-    bevelSize: 0.02,
-    steps: 5,
+    bevelThickness: 0.015,
+    bevelSize: 0.015,
+    bevelSegments: 3,
+    steps: 1,
   });
 
-  // Put the slice on the XZ plane, extrude "up" in Y.
-  geom1.rotateX(-Math.PI / 2);
+  geom.rotateX(-Math.PI / 2);
 
-  return geom1;
+  // For negative height, translate down instead of flipping scale.
+  // geom.scale(1, -1, 1) reverses vertex winding order, corrupting normals
+  // for lit materials (wireframe is immune since it ignores normals).
+  // Translating by `height` (negative value) shifts the geometry from
+  // [y=0 → y=|height|] down to [y=height → y=0] — same inverted shape,
+  // normals stay correct.
+  if (height < 0) {
+    geom.translate(0, height, 0);
+  }
+
+  return geom;
 }
 
-/**
- * Create a THREE.Color based on a semitone index and chord key. 
- * Matches each chord major and minor to the same color, but minors are darker and more muted.
- *
- * @returns A THREE.Color with HSL corresponding to the chord.
- */
-function colorForIndex(index: number, name: ChordKey) {
-  const ID = name.slice(-1);
-  const isMinor = ID === 'm' ? 3 : 0;
+/** Thin floating arc that orbits above each slice */
+function makeFloatingArcGeometry(
+  radius: number,
+  theta0: number,
+  theta1: number,
+) {
+  const segments = 48;
+  const points: THREE.Vector3[] = [];
+  for (let i = 0; i <= segments; i++) {
+    const t = theta0 + (theta1 - theta0) * (i / segments);
+    points.push(new THREE.Vector3(radius * Math.sin(t + Math.PI/2), 0, radius * Math.cos(t + Math.PI/2)));
+  }
+  const geom = new THREE.TubeGeometry(
+    new THREE.CatmullRomCurve3(points, false, 'centripetal'),
+    segments, 0.012, 6, false,
+  );
+  return geom;
+}
 
+/* ─── color ─────────────────────────────────────────────────── */
+function colorForIndex(index: number, name: DataKey) {
+  const isMinor = name.slice(-1) === 'm' ? 3 : 0;
   const adjustedIndex = (index + isMinor) % 12;
-
-  // Hue around the wheel
-  const h = adjustedIndex / 12; // 0..1
-  const s = .9;
-  const l = .55;
-  // const s = !isMinor ? 0.9 : 0.65; // inner muted
-  // const l = !isMinor ? 0.55 : 0.45; // inner darker
+  const h = adjustedIndex / 12;
+  const s = 0.88;
+  const l = 0.58;
   const c = new THREE.Color();
   c.setHSL(h, s, l);
   return c;
 }
 
 /**
- * Creates a single chord slice. Updates chord overlay on hover and click.
- * highlights current chord with using bloom
+ * Crystalline chord slice with:
+ *   1. metallic base wedge
+ *   2. Wireframe overlay for crystalline facets
+ *   3. Floating neon arc ring above
+ *   4. Chord label on top
  */
 export function ChordSlice({
+  flag, // determines if called from ChordWedge or NoteWedge
   index,
   chord,
   rInner,
   rOuter,
-  chordMap,
+  dataMap,
   setOverlay,
 }: SliceProps ) {
-  const slice = chordMap[chord];
-		
-  // 12 slices
+  const slice = dataMap[chord];
+
+  // const invert = flag ? -1 : 1; // used with noteWedge stuff
+  // const baseHeight = 0.12;
+  // const maxExtraHeight = flag ? 6 : 3;
+  // const hei = flag ? slice.notePct : slice.pct;
+  const invert = flag ? -1 : 1; // used with noteWedge stuff
+  const baseHeight = 0.12;
+  const maxExtraHeight = 3;
+
   const { theta0, theta1, thetaMid } = useMemo(() => {
     const step = (Math.PI * 2) / 12;
     const top = -Math.PI / 2;
-    const gap = 0.035; // gap between slices to visually separate them
+    const gap = 0.035;
     const t0 = top + index * step - gap;
     const t1 = t0 + step - gap;
     return { theta0: t0, theta1: t1, thetaMid: (t0 + t1) / 2 };
-  }, [chordMap]);
+  }, [dataMap]);
 
-  const baseHeight = 0.1;
-  const maxExtraHeight = 3; // scale's pct to this max height
-		
-  const height = useMemo(() => baseHeight + slice.pct * maxExtraHeight, [chordMap]);
-  // const isSelected = selectedLabel === datum.label;
-		
+  const height = useMemo(() => (baseHeight + slice.pct * maxExtraHeight) * invert, [dataMap]);
+
+  /* ── geometries ── */
   const geometry = useMemo(
     () => makeAnnularSectorGeometry(rOuter, rInner, theta0, theta1, height),
-    [chordMap]
+    [dataMap]
   );
 
-  const baseColor = useMemo(() => colorForIndex(index, slice.name), [chordMap]);
+  const arcGeometry = useMemo(
+    () => makeFloatingArcGeometry(rOuter, theta0, theta1),
+    [dataMap]
+  );
+
+  const innerArcGeometry = useMemo(
+    () => makeFloatingArcGeometry(rInner, theta0, theta1), [dataMap]
+  );
+
+  /* ── wireframe scale correction ──
+    scale={s} on a mesh scales from world origin, not geometry center.
+    Offset = center * (1 - s) cancels the drift so the scale appears
+    to happen around the geometry's own bounding-box center. */
+  const wireframePosition = useMemo(() => {
+    geometry.computeBoundingBox();
+    const center = new THREE.Vector3();
+    if (geometry.boundingBox) {
+      geometry.boundingBox.getCenter(center);
+    }
+    const s = 1.01;
+    return center.multiplyScalar(1 - s);
+  }, [geometry]);
+
+  /* ── colors ── */
+  const baseColor = useMemo(() => colorForIndex(index, slice.name), [dataMap]);
+  const brightColor = useMemo(() => baseColor.clone().multiplyScalar(1.6), [baseColor]);
+  const darkBase = useMemo(() => baseColor.clone().multiplyScalar(.65), [baseColor]);
+
+  /* ── interaction ── */
+  const makeOverlay = useCallback(() => ({
+    display: slice.name,
+    count: slice.count,
+    pct: slice.count > 0 ? (slice.pct * 100).toFixed(2) + '%' : '0%',
+    seconds: slice.count > 0 ? slice.seconds.toFixed(1) + 's' : '0s',
+    color: baseColor.clone(),
+  }), [dataMap, baseColor]);
 
   const onSelect = useCallback(
     (e: ThreeEvent<PointerEvent>) => {
       e.stopPropagation();
-		
-      setOverlay({
-        display: slice.name,
-        count: slice.count,
-        pct: slice.pctDisplay,
-        seconds: slice.time,
-        color: baseColor.clone(),
-      });
+      setOverlay(makeOverlay());
     },
-    [chordMap, setOverlay]
+    [makeOverlay, setOverlay]
   );
-		
+
   const onHover = useCallback(
     (e: ThreeEvent<PointerEvent>) => {
       e.stopPropagation();
-      setOverlay({
-        display: slice.name,
-        count: slice.count,
-        pct: slice.pctDisplay,
-        seconds: slice.time,
-        color: baseColor.clone()
-      });
+      setOverlay(makeOverlay());
       document.body.style.cursor = 'pointer';
     },
-    [chordMap, setOverlay]
+    [makeOverlay, setOverlay]
   );
 
-  // Calculate text position at the center of the wedge, on top
+  /* ── text position on top of wedge ── */
   const textPosition = useMemo(() => {
-    const correction = Math.PI / 2; // idky but position is off by 90deg, this fixes it
+    const correction = Math.PI / 2;
     const rMid = (rInner + rOuter) / 2;
     const x = rMid * Math.sin(thetaMid + correction);
     const z = rMid * Math.cos(thetaMid + correction);
-    const y = height + 0.03;
+    const y = height + 0.06 * invert;
     return [x, y, z] as const;
-  }, [chordMap]);
-
-  const wireProps = useMemo(() => ({
-    color: baseColor.clone(),
-    metalness: 0.5,
-    emissive: baseColor, // make the emissive color a brighter version of the base color
-    emissiveIntensity: .2,
-    toneMapped: false,  
-    wireframe: true,
-  } satisfies MeshStandardMaterialProps), [baseColor]);
-
-  // super transparent material, glass like, but with a subtle glow of the chord color, for meshPhysicalMaterial
-  const glassPropsPhysical = useMemo(() => ({
-    color: baseColor.clone().multiplyScalar(1.4),
-    transparent: true,
-    opacity: 0.45,
-    transmission: 1, // Make it look more like glass
-    toneMapped: false,  
-    ior: 1,
-  } satisfies MeshPhysicalMaterialProps), [baseColor]);
-
-  // // track last active value so we only write when it changes
-  // const lastActiveRef = useRef<ChordKey | null>(null);
-  // const wireMatRef = useRef<THREE.MeshPhysicalMaterial>(null);
-  // const glassMatRef = useRef<THREE.MeshPhysicalMaterial>(null);
-  // useFrame(() => {
-  //   const active = activeChordRef.current;
-
-  //   // only update when it changes
-  //   if (active !== chord && lastActiveRef.current !== chord) {return;}
-
-  //   lastActiveRef.current = active;
-  //   const isActive = active === chord;
-  //   const w = wireMatRef.current;
-  //   const g = glassMatRef.current;
-
-  //   if (!w || !g) {return;}
-  //   // drive bloom: hot emissive + toneMapped false
-  //   for (const mat of [w, g]) {
-  //     mat.toneMapped = false;
-  //     mat.emissive.copy(baseColor);
-  //     // mat.emissiveIntensity = isActive ? 2.5 : 0.2;
-  //   }
-  //   w.emissiveIntensity = isActive ? 3.5 : 0.2;
-  //   g.emissiveIntensity = isActive ? 2.5 : 0.2;
-  // });
+  }, [dataMap]);
 
   return (
     <group>
-      <group>
-        <mesh
-          geometry={geometry}
-          onPointerDown={onSelect}
-          onPointerEnter={onHover}
-          castShadow
-          receiveShadow
-        >
-          {/* <meshStandardMaterial attach="material" ref={wireMatRef} {... wireProps}/> */}
-          <meshStandardMaterial {... wireProps}/>
-        </mesh>
+      {/* ── Dark obsidian base wedge ── */}
+      <mesh
+        geometry={geometry}
+        onPointerDown={onSelect}
+        onPointerEnter={onHover}
+      >
+        <meshPhysicalMaterial
+          color={darkBase}
+          metalness={0.85}
+          roughness={0.18}
+          clearcoat={1}
+          clearcoatRoughness={0.05}
+          reflectivity={1}
+        />
+      </mesh>
 
-        <mesh geometry={geometry} receiveShadow scale={.99}>
-          {/* <meshPhysicalMaterial attach="material" ref={glassMatRef} {... glassPropsPhysical} /> */}
-          <meshPhysicalMaterial {... glassPropsPhysical} />
+      {/* ── Wireframe overlay for crystalline facets ── */}
+      <mesh geometry={geometry} scale={1.01} position={wireframePosition} >
+        <meshStandardMaterial
+          color={baseColor}
+          wireframe
+          transparent
+          opacity={0.2}
+          emissive={baseColor}
+          emissiveIntensity={0.85}
+          toneMapped={false}
+        />
+      </mesh>
+
+      {/* ── Floating neon arc ring ── */}
+      <group position={[0, height, 0]}>
+        <mesh geometry={arcGeometry}>
+          <meshStandardMaterial
+            color={brightColor}
+            emissive={brightColor}
+            emissiveIntensity={4}
+            toneMapped={false}
+            transparent
+            opacity={0.9}
+          />
         </mesh>
       </group>
 
-      <group position={textPosition} rotation={[-Math.PI / 2, 0, 0]}>
+      {/* -- Smaller floating neon arc ring, for rHole only */}
+      {rInner === 0.85 && (
+        <group position={[0, height, 0]}>
+          <mesh geometry={innerArcGeometry}>
+            <meshStandardMaterial
+              color={brightColor}
+              emissive={brightColor}
+              emissiveIntensity={4}
+              toneMapped={false}
+              transparent
+              opacity={0.9}
+            />
+          </mesh>
+        </group>
+      )}
+
+      {/* ──  Chord label ── */}
+      <group position={textPosition} rotation={[-Math.PI / 2, flag ? Math.PI : 0, flag? Math.PI : 0]}>
         <Center>
           <group>
-            {/* Outline text */}
+            {/* shadow / outline */}
+            <Text3D
+              font="https://threejs.org/examples/fonts/helvetiker_regular.typeface.json"
+              size={0.2}
+              height={0.03}
+              bevelEnabled={false}
+              scale={1.04}
+              position={[-0.005, -0.015, -0.005]}
+            >
+              {slice.name}
+              <meshBasicMaterial color="#111111" transparent opacity={0.9} />
+            </Text3D>
+
+            {/* main text – bright emissive so it glows through bloom */}
             <Text3D
               font="https://threejs.org/examples/fonts/helvetiker_regular.typeface.json"
               size={0.2}
               height={0.04}
-              letterSpacing={-0.01}
               bevelEnabled={false}
-              scale={1.03}
-              position={[-.005, -.015, 0]}
+              scale={1.0}
             >
               {slice.name}
-              <meshBasicMaterial color={'#d0cfcf'} />
-            </Text3D>
-
-            {/* actual text */}
-            <Text3D
-              font="https://threejs.org/examples/fonts/helvetiker_regular.typeface.json"
-              size={0.2}
-              height={0.05}
-              // scale={0.98}
-              letterSpacing={-0.01}
-              bevelEnabled={false}
-            >
-              {slice.name}
-              <meshStandardMaterial color={baseColor.clone()} />
+              <meshStandardMaterial
+                color="#ffffff"
+                emissive={baseColor.clone()}
+                emissiveIntensity={1.3}
+                toneMapped={false}
+              />
             </Text3D>
           </group>
         </Center>

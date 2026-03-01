@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../css/set-theory.css';
 import { useNavigate } from 'react-router-dom';
 import { LoadingUI } from '../../components/LoadingUI';
-import { getParsedData } from '../../utils/sherlockApi';
+import { getParsedData, healthPing } from '../../utils/sherlockApi';
 
 // Demo track configuration
 type DemoTrack = {
@@ -23,6 +23,24 @@ export const SeeingSounds: React.FC = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
+
+  // "wake" backend, in case it's not awake
+  useEffect(() => {
+    const initializeSherlock = async () => {
+      try {
+        const response = await healthPing();
+        if (!response) { throw new Error(); }
+
+      } catch (err: unknown) {
+        const errorMessage = 'Error: Backend failed. Use demo file or refresh and try again.';
+        setLoadingMessage(errorMessage);
+        setIsProcessing(true);
+        setTimeout(() => setIsProcessing(false), 3000);
+      }
+    };
+
+    initializeSherlock();
+  }, []);
 
   /**
 	 * Takes file input, saves it somewhere not very permanent, then passes it 
@@ -80,8 +98,8 @@ export const SeeingSounds: React.FC = () => {
         throw new Error(`Could not find analysis file at ${jsonPath}`);
       }
       
-      // This is "lazy loading" — the data is only downloaded now!
-      const analysisData = await jsonRes.json();
+      // lazy load the json
+      const analysisData = await jsonRes.json();// Debug log
 
       // C. Transition
       setLoadingMessage('Ready!');

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChordWheel } from '../features/sounds-visuals/components/ChordWheel';
+import { SoundWheels } from '../features/sounds-visuals/components/SoundWheels';
 import { PlaceholderPhaseSpace, PlaceholderSpectrogram } from '../features/sounds-visuals/test';
 import { SherlockReport } from '../pages/seeing-sounds/Analysis';
 
@@ -20,8 +20,8 @@ export const modules: VisualizerModule[] = [
     id: 'phase-space',
     title: 'Chord Wheel',
     description:
-    'Guesses at what chord compromise a song, where height is a measurement of times chord was seen. I am 70% sure it\'s 75% accurate.',
-    Component: ChordWheel
+    'Guesses at what chord\'s and note\'s compromise a song. I am 70% sure it\'s 75% accurate. \n A cool patterns: The most played chord and note are almost always touching each other. Even if it\'s a minor chord.',
+    Component: SoundWheels
   },
   { 
     id: 'spectrogram', 

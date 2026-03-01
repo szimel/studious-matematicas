@@ -1,8 +1,8 @@
 import { useFrame } from '@react-three/fiber';
-import { ALLOWED, ChordKey, ChordSegment } from '../ChordWheel';
+import { ALLOWED, DataKey, DataSegment } from '../../../../types/sound_data_types';
 import { useRef } from 'react';
 
-function findSegmentIndex(segments: ChordSegment[], t: number): number {
+function findSegmentIndex(segments: DataSegment[], t: number): number {
   // binary search for the last segment with start <= t
   let lo = 0, hi = segments.length - 1, ans = -1;
   while (lo <= hi) {
@@ -14,10 +14,11 @@ function findSegmentIndex(segments: ChordSegment[], t: number): number {
   return -1;
 }
 
-function parseChordKey(label: string): ChordKey | null {
+function parseChordKey(label: string | string[]): DataKey | null {
+  if (typeof label !== 'string') {return null;} // HACKY!
   const [root, qual] = label.split(':'); // "A#:min"
-  const cand = qual === 'min' ? `${root}m` : root;
-  return ALLOWED.has(cand as ChordKey) ? (cand as ChordKey) : null;
+  const candidate = qual === 'min' ? `${root}m` : root;
+  return ALLOWED.has(candidate as DataKey) ? (candidate as DataKey) : null;
 }
 
 export function ChordSync({
@@ -25,13 +26,13 @@ export function ChordSync({
   audioRef,
   activeChordRef,
 }: {
-  segments: ChordSegment[];
+  segments: DataSegment[];
   audioRef: React.RefObject<HTMLAudioElement>;
-  activeChordRef: React.MutableRefObject<ChordKey | null>;
+  activeChordRef: React.MutableRefObject<DataKey | null>;
 }) {
   const segIndexRef = useRef(-1);
   const lastTimeRef = useRef(0);
-  const lastChordRef = useRef<ChordKey | null>(null);
+  const lastChordRef = useRef<DataKey | null>(null);
 
   useFrame(() => {
     const a = audioRef.current;

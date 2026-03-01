@@ -4,25 +4,19 @@ import '../../css/sound-analysis.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AudioPlayer } from '../../features/sounds-visuals/AudioPlayer';
 import { modules } from '../../types/types';
+import { DataSegment } from '../../types/sound_data_types';
 
 // TODO: error screen using <LoadingUI> when no response file OR track file
-
-type ChordSegment = {
-  start: number;
-  end: number;
-  label: string;
-};
 
 export interface SherlockReport {
   file_name: string;
   duration: number;
-	fps: number;
-  tonal_profile: number[];
-  time_series_notes: number[][];
-  spectrogram_data: number[][];
-  raw_data: number[];
+	fps: number
+  sr: number;
+  hop_length: number;
   audio_url: string;
-	c_chord_segments: Array<ChordSegment>
+	chord_segments: Array<DataSegment>
+	note_segments: Array<DataSegment>
 }
 
 export const SeeingSoundsAnalysis: React.FC = () => {
@@ -34,7 +28,7 @@ export const SeeingSoundsAnalysis: React.FC = () => {
   const [activeModuleIndex, setActiveModuleIndex] = useState(0);
   const activeModule = modules[activeModuleIndex];
   
-  // Extract the "Evidence" from the router state
+  // Extract the "evidence" from the router state
   const report = location.state as SherlockReport;
 
   // If someone navigates here directly without data, send them back
@@ -48,6 +42,7 @@ export const SeeingSoundsAnalysis: React.FC = () => {
     audioRef.current?.currentTime && setCurrentFrame(frame);
     setCurrentFrame(frame);
   };
+
 
   return (
     <div className='st-container' style={styles.dashboardRoot}>
