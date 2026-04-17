@@ -38,3 +38,28 @@ export type NoteSegment = {
 	end: number
 	notes: DataKey[]
 }
+
+export type FingerprintPair = {
+	note: typeof OUTER[number]
+	chord: string
+	start: number
+	end: number
+	related: boolean
+}
+
+export type FingerprintSummary = {
+	fingerprintCount: number
+	relatedRatio: number
+	notePairCount: number[]
+	noteRelatedRatio: number[]
+	chordPairCount: Record<string, number>
+	chordRelatedRatio: Record<string, number>
+	firstStartByChord: Record<string, number>
+	firstStartByNote: Array<number | null>
+	maxPairDuration: number
+}
+
+export type Fingerprint = {
+	summary: FingerprintSummary
+	sampled: FingerprintPair[]
+}

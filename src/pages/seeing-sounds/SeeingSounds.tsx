@@ -1,28 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../../css/set-theory.css';
 import { useNavigate } from 'react-router-dom';
 import { LoadingUI } from '../../components/LoadingUI';
 import { getParsedData, healthPing } from '../../utils/sherlockApi';
+import { demoSongs } from '../../types/types';
+import { persistAnalysisState, persistUploadedAudio } from '../../utils/analysisSession';
+import { DataKey, DataProps, Fingerprint } from '../../types/sound_data_types';
 
-// Demo track configuration
-type DemoTrack = {
-	id: string
-	label: string
-	icon: string
-	name: string
-	file: string
-}
+type DemoSong = {
+  label: string;
+  file: string;
+};
 
-const demoTracks: DemoTrack[] = [
-  { id: 'piano', label: 'My favorite piano piece', icon: '🎹', name: 'Clair De Lune', file: '/audio/clair_de_lune.mp3' },
-  { id: 'synth', label: 'Zelda!', icon: '🌊', name: 'Fairy Fountain', file: '/audio/fairy_fountain.mp3' },
-  { id: 'ambient', label: 'Beatles!', icon: '🎸', name: 'Blackbird', file: '/audio/blackbird.mp3' }
-];
+type AnalysisPayload = {
+  audio_url: string;
+  audio_upload_id?: string;
+  file_name: string;
+  duration: number;
+  fps: number;
+  sr: number;
+  hop_length: number;
+  parsed_chords: Record<DataKey, DataProps>;
+  parsed_notes: Record<DataKey, DataProps>;
+  spectrogram_data: number[][];
+  fingerprint: Fingerprint;
+  error?: string;
+};
 
 export const SeeingSounds: React.FC = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [isDemoMenuOpen, setIsDemoMenuOpen] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(Object.keys(demoSongs)[0] ?? '');
+  const [isNarrowViewport, setIsNarrowViewport] = useState(false);
+  const demoMenuRef = useRef<HTMLDivElement>(null);
+  const selectedSongs = demoSongs[selectedPerson] ?? [];
 
   // "wake" backend, in case it's not awake
   useEffect(() => {
@@ -42,6 +55,34 @@ export const SeeingSounds: React.FC = () => {
     initializeSherlock();
   }, []);
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 720px)');
+    const updateViewportMode = (event?: MediaQueryListEvent) => {
+      setIsNarrowViewport(event ? event.matches : mediaQuery.matches);
+    };
+
+    updateViewportMode();
+    mediaQuery.addEventListener('change', updateViewportMode);
+
+    return () => {
+      mediaQuery.removeEventListener('change', updateViewportMode);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (!demoMenuRef.current?.contains(event.target as Node)) {
+        setIsDemoMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
+
   /**
 	 * Takes file input, saves it somewhere not very permanent, then passes it 
 	 * along to python api "sherlock". Navigates to /analysis, given success
@@ -52,6 +93,7 @@ export const SeeingSounds: React.FC = () => {
       if (!file) {return;}
 
       const url = URL.createObjectURL(file);
+      const uploadId = `${Date.now()}-${file.name}`;
     
       setIsProcessing(true);
       setLoadingMessage(`Analyzing "${file.name}"...`);
@@ -63,10 +105,20 @@ export const SeeingSounds: React.FC = () => {
 
       if (result.error) {throw new Error(result.error);}
 
+      await persistUploadedAudio(uploadId, file);
+
+      const payload: AnalysisPayload = {
+        ...result,
+        audio_url: url,
+        audio_upload_id: uploadId,
+      };
+
+      persistAnalysisState(payload);
+
       setLoadingMessage('Analysis Complete!');
       setTimeout(() => {
         setIsProcessing(false);
-        navigate('/seeing-sounds/analysis', { state: { ...result, audio_url: url } });
+        navigate('/seeing-sounds/analysis', { state: payload });
       }, 1500);
 
     } catch (err: unknown) {
@@ -80,18 +132,15 @@ export const SeeingSounds: React.FC = () => {
 	 * Fetches lazy loaded .mp3 and .json for corresponding demo track. Sends to /analysis,
 	 * given no errors. 
 	 */
-  const loadDemoData = async (track: DemoTrack) => {
+  const loadDemoData = async (song: DemoSong) => {
     try {
       setIsProcessing(true);
-      setLoadingMessage(`Loading "${track.name}"...`);
-
-      // A. Create the Audio URL
-      const audioRes = await fetch(track.file);
-      const audioBlob = await audioRes.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
+      setLoadingMessage(`Loading "${song.label}"...`);
 
       // B. Fetch the Pre-computed JSON
-      const jsonPath = track.file.replace('/audio/', '/json/').replace('.mp3', '.json');
+      const jsonPath = song.file
+        .replace('/audio/', '/json/')
+        .replace(/\.[^.]+$/, '.json');
       
       const jsonRes = await fetch(jsonPath);
       if (!jsonRes.ok) {
@@ -100,14 +149,21 @@ export const SeeingSounds: React.FC = () => {
       
       // lazy load the json
       const analysisData = await jsonRes.json();// Debug log
+      const payload: AnalysisPayload = {
+        ...analysisData,
+        audio_url: song.file,
+      };
+
+      persistAnalysisState(payload);
 
       // C. Transition
       setLoadingMessage('Ready!');
       setTimeout(() => {
         setIsProcessing(false);
+        setIsDemoMenuOpen(false);
         // Pass the fetched JSON + the audio URL to the next page
         navigate('/seeing-sounds/analysis', { 
-          state: { ...analysisData, audio_url: audioUrl } 
+          state: payload 
         });
       }, 800); 
 
@@ -158,22 +214,70 @@ export const SeeingSounds: React.FC = () => {
 
         {/* Demo songs */}
         <p style={styles.subtext}>Or try a pre-loaded analysis:</p>
-        <div style={styles.demoGrid}>
-          {demoTracks.map(track => (
-            <button
-              key={track.id}
-              onClick={() => loadDemoData(track)}
-              style={styles.demoButton}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#3d3e42')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#2d2e32')}
+        <div style={styles.demoBrowser} ref={demoMenuRef}>
+          <button
+            type="button"
+            onClick={() => setIsDemoMenuOpen((current) => !current)}
+            style={styles.demoLauncher}
+            aria-expanded={isDemoMenuOpen}
+            aria-haspopup="dialog"
+          >
+            <span style={styles.demoLauncherLabel}>Browse demo songs</span>
+            <span style={styles.demoLauncherMeta}>{selectedPerson || 'Choose a person'}</span>
+          </button>
+
+          {isDemoMenuOpen && (
+            <div
+              style={{
+                ...styles.demoPanel,
+                ...(isNarrowViewport ? styles.demoPanelNarrow : styles.demoPanelWide),
+              }}
             >
-              <span style={{ fontSize: '1.2rem' }}>{track.icon}</span> 
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: '0.9rem', color: '#fff' }}>{track.label}</div>
-                <div style={{ fontSize: '0.75rem', color: '#888' }}>{track.name}</div>
+              <div style={{
+                ...styles.demoPeopleColumn,
+                ...(isNarrowViewport ? styles.demoPeopleColumnNarrow : null),
+              }}>
+                {Object.entries(demoSongs).map(([person, songs]) => {
+                  const isActive = person === selectedPerson;
+
+                  return (
+                    <button
+                      key={person}
+                      type="button"
+                      onClick={() => setSelectedPerson(person)}
+                      style={{
+                        ...styles.personButton,
+                        ...(isActive ? styles.personButtonActive : null),
+                      }}
+                    >
+                      <span>{person}</span>
+                      <span style={styles.personCount}>{songs.length}</span>
+                    </button>
+                  );
+                })}
               </div>
-            </button>
-          ))}
+
+              <div style={styles.demoSongsColumn}>
+                <div style={styles.demoSongsHeader}>
+                  <span>{selectedPerson}</span>
+                  <span style={styles.demoCount}>{selectedSongs.length} song{selectedSongs.length === 1 ? '' : 's'}</span>
+                </div>
+                <div style={styles.demoSongList}>
+                  {selectedSongs.map((song) => (
+                    <button
+                      key={`${selectedPerson}-${song.file}`}
+                      type="button"
+                      onClick={() => loadDemoData(song)}
+                      style={styles.demoSongButton}
+                    >
+                      <span style={styles.demoSongTitle}>{song.label}</span>
+                      <span style={styles.demoSongFile}>{song.file.split('/').pop()?.replace(/\.[^.]+$/, '')}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -213,7 +317,8 @@ const styles = {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: '20px',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
+    width: '100%',
   },
   uploadButton: {
     backgroundColor: '#4A90E2',
@@ -224,6 +329,7 @@ const styles = {
     fontWeight: '600' as const,
     fontSize: '1rem',
     transition: 'background 0.2s ease',
+    alignSelf: 'flex-start',
   },
   subtext: {
     color: '#666',
@@ -234,22 +340,144 @@ const styles = {
     letterSpacing: '1.5px',
     fontWeight: '700' as const,
   },
-  demoGrid: {
+  demoBrowser: {
+    position: 'relative' as const,
     display: 'flex',
-    gap: '12px',
-    flexWrap: 'wrap' as const,
+    flexDirection: 'column' as const,
+    gap: '10px',
+    width: '100%',
+    maxWidth: '560px',
   },
-  demoButton: {
+  demoLauncher: {
     background: '#2d2e32',
     border: '1px solid #444',
+    borderRadius: '12px',
     color: '#efefef',
-    padding: '12px 20px',
-    borderRadius: '10px',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '16px',
+    padding: '14px 16px',
+    width: '100%',
+    textAlign: 'left' as const,
+  },
+  demoLauncherLabel: {
+    fontWeight: '600' as const,
+    fontSize: '0.98rem',
+    color: '#ffffff',
+  },
+  demoLauncherMeta: {
+    color: '#8f95a3',
+    fontSize: '0.82rem',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.08em',
+  },
+  demoPanel: {
+    position: 'absolute' as const,
+    top: 'calc(100% + 8px)',
+    left: 0,
+    width: '100%',
+    background: '#202126',
+    border: '1px solid #3a3b40',
+    borderRadius: '14px',
+    boxShadow: '0 18px 50px rgba(0, 0, 0, 0.35)',
+    zIndex: 20,
+    overflow: 'hidden',
+  },
+  demoPanelWide: {
+    display: 'grid',
+    gridTemplateColumns: '170px minmax(0, 1fr)',
+  },
+  demoPanelNarrow: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+  },
+  demoPeopleColumn: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '6px',
+    padding: '12px',
+    background: '#25262b',
+    borderRight: '1px solid #34363d',
+  },
+  demoPeopleColumnNarrow: {
+    borderRight: 'none',
+    borderBottom: '1px solid #34363d',
+  },
+  personButton: {
+    background: 'transparent',
+    border: '1px solid transparent',
+    borderRadius: '10px',
+    color: '#d8dbe2',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '10px',
+    padding: '10px 12px',
+    textAlign: 'left' as const,
+    width: '100%',
+  },
+  personButtonActive: {
+    background: '#111318',
+    border: '1px solid #4A90E2',
+    color: '#ffffff',
+  },
+  personCount: {
+    color: '#8f95a3',
+    fontSize: '0.78rem',
+    fontWeight: '600' as const,
+  },
+  demoSongsColumn: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '10px',
+    padding: '12px',
+    minWidth: 0,
+  },
+  demoSongsHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     gap: '12px',
-    transition: 'all 0.2s ease',
+    color: '#efefef',
+    padding: '4px 2px',
+    fontWeight: '600' as const,
+  },
+  demoCount: {
+    color: '#8f95a3',
+    fontSize: '0.8rem',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.08em',
+  },
+  demoSongList: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '8px',
+  },
+  demoSongButton: {
+    background: '#1e1f23',
+    border: '1px solid #3a3b40',
+    color: '#efefef',
+    padding: '12px 14px',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: '12px',
+    textAlign: 'left' as const,
+    width: '100%',
+  },
+  demoSongTitle: {
+    fontSize: '0.95rem',
+    color: '#ffffff',
+  },
+  demoSongFile: {
+    fontSize: '0.72rem',
+    color: '#7f8592',
+    wordBreak: 'break-word' as const,
   },
   loadingText: {
     color: '#fff',

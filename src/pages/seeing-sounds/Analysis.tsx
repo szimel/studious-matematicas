@@ -1,24 +1,26 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../../css/set-theory.css';
 import '../../css/sound-analysis.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AudioPlayer } from '../../features/sounds-visuals/AudioPlayer';
 import { modules } from '../../types/types';
-import { DataSegment } from '../../types/sound_data_types';
+import { DataKey, DataProps, Fingerprint } from '../../types/sound_data_types';
+import { getPersistedUploadedAudio, persistAnalysisState, readPersistedAnalysisState } from '../../utils/analysisSession';
 
 // TODO: error screen using <LoadingUI> when no response file OR track file
-
 export interface SherlockReport {
   file_name: string;
   duration: number;
-	fps: number
+	fps: number;
   sr: number;
   hop_length: number;
   audio_url: string;
-	chord_segments: Array<DataSegment>
-	note_segments: Array<DataSegment>
+  audio_upload_id?: string;
+	parsed_chords: Record<DataKey, DataProps>;
+	parsed_notes: Record<DataKey, DataProps>;
 	/** Chromagram matrix from backend: shape (N_frames × 12 bins), values 0–255 */
-	spectrogram_data: number[][]
+	spectrogram_data: number[][];
+  fingerprint: Fingerprint;
 }
 
 export const SeeingSoundsAnalysis: React.FC = () => {
@@ -29,13 +31,49 @@ export const SeeingSoundsAnalysis: React.FC = () => {
   const [, setCurrentFrame] = useState(0);
   const [activeModuleIndex, setActiveModuleIndex] = useState(0);
   const activeModule = modules[activeModuleIndex];
-  
-  // Extract the "evidence" from the router state
-  const report = location.state as SherlockReport;
 
-  // If someone navigates here directly without data, send them back
+  const routeReport = location.state as SherlockReport | null;
+  const [report, setReport] = useState<SherlockReport | null>(routeReport ?? readPersistedAnalysisState<SherlockReport>());
+  const [resolvedAudioUrl, setResolvedAudioUrl] = useState<string>(routeReport?.audio_url ?? '');
+
+  useEffect(() => {
+    if (routeReport) {
+      setReport(routeReport);
+      persistAnalysisState(routeReport);
+    }
+  }, [routeReport]);
+
+  useEffect(() => {
+    let localUrl = '';
+
+    const restoreAudio = async () => {
+      if (!report) {
+        navigate('/seeing-sounds');
+        return;
+      }
+
+      if (report.audio_upload_id) {
+        const uploadedBlob = await getPersistedUploadedAudio(report.audio_upload_id);
+        if (uploadedBlob) {
+          localUrl = URL.createObjectURL(uploadedBlob);
+          setResolvedAudioUrl(localUrl);
+          return;
+        }
+      }
+
+      setResolvedAudioUrl(report.audio_url);
+    };
+
+    restoreAudio();
+
+    return () => {
+      if (localUrl) {
+        URL.revokeObjectURL(localUrl);
+      }
+    };
+  }, [navigate, report]);
+
   if (!report) {
-    navigate('/seeing-sounds');
     return null;
   }
   // time passed from audio player
@@ -99,7 +137,7 @@ export const SeeingSoundsAnalysis: React.FC = () => {
       </div>
 
       <footer className='analysis-footer'>
-        <AudioPlayer src={report.audio_url} duration={report.duration} audioRef={audioRef} onTimeUpdate={handleSync} />
+        <AudioPlayer src={resolvedAudioUrl} duration={report.duration} audioRef={audioRef} onTimeUpdate={handleSync} />
       </footer>
     </div>
   );

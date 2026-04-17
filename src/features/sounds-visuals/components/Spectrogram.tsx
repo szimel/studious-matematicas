@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useMemo, useRef, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Text, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
@@ -21,7 +21,47 @@ const AHEAD      = 0;         // orbit target leads the playhead by this many wo
 const CAM_DY     = 3.8;       // camera height above target
 const CAM_DZ     = 7;         // camera z-offset (side viewing angle)
 const CAM_DX     = 0;         // camera slightly behind target
-const BG         = '#000000';
+
+
+function makeBackdropTexture() {
+  const c = document.createElement('canvas');
+  c.width = 1024;
+  c.height = 1024;
+  const ctx = c.getContext('2d');
+  if (!ctx) {
+    return null;
+  }
+
+  const grad = ctx.createLinearGradient(0, 0, 0, c.height);
+  grad.addColorStop(1, '#06021c');
+  grad.addColorStop(.15, '#220646');
+  grad.addColorStop(0, 'rgb(20, 2, 35)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, c.width, c.height);
+
+  const glow = ctx.createRadialGradient(c.width * 0.56, c.height * 0.38, 40, c.width * 0.56, c.height * 0.38, 560);
+  glow.addColorStop(0, 'rgba(94, 58, 180, 0.34)');
+  glow.addColorStop(0.45, 'rgba(70, 42, 145, 0.16)');
+  glow.addColorStop(1, 'rgba(10, 8, 24, 0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, c.width, c.height);
+
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.045)';
+  ctx.lineWidth = 1;
+  for (let y = 0; y < c.height; y += 64) {
+    ctx.beginPath();
+    ctx.moveTo(0, y + 0.5);
+    ctx.lineTo(c.width, y + 0.5);
+    ctx.stroke();
+  }
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+
+  return tex;
+}
 
 // ── Magma colormap ───────────────────────────────────────────────────────────
 const MAGMA = [
@@ -113,38 +153,13 @@ function FrequencyLines({ specData, fps }: { specData: number[][]; fps: number }
 }
 
 /**
- * Translucent wall that marks the current playback position.
- * Extends vertically across all 12 note lanes.
- */
-function Playhead({ audioRef }: { audioRef: React.RefObject<HTMLAudioElement> }) {
-  const mesh  = useRef<THREE.Mesh>(null);
-  const zSpan = (BINS - 1) * Z_GAP;
-
-  useFrame(() => {
-    const a = audioRef.current;
-    if (a && mesh.current) { mesh.current.position.x = a.currentTime * X_SEC; }
-  });
-
-  return (
-    <mesh ref={mesh} position={[0, PEAK_Y * 0.5, zSpan / 2]}>
-      <boxGeometry args={[0.03, PEAK_Y * 1.2, zSpan]} />
-      <meshBasicMaterial
-        color="#ffffff"
-        transparent
-        opacity={0.28}
-        toneMapped={false}
-        depthWrite={false}
-      />
-    </mesh>
-  );
-}
-
-/**
  * Note names (C–B) pinned to the left side of the visible window.
  * They follow the playhead so they remain on-screen at all times.
  */
 function NoteLabels({ audioRef }: { audioRef: React.RefObject<HTMLAudioElement> }) {
   const group = useRef<THREE.Group>(null);
+  const X = 1.2;
+  const Y = PEAK_Y + 0.42;
 
   useFrame(() => {
     if (!audioRef.current || !group.current) { return; }
@@ -154,18 +169,48 @@ function NoteLabels({ audioRef }: { audioRef: React.RefObject<HTMLAudioElement> 
   return (
     <group ref={group}>
       {NOTE_NAMES.map((n, i) => {
-        const offSet = i % 2 ? -0.15 : .15; 
+        const hBarLen = ((1 - (i + 1)/NOTE_NAMES.length) + 0.1);
+        const hBarX = hBarLen/2 + X;
+
         return (
-          <Text
-            key={n}
-            position={[1.35 + offSet, 3.4, i * Z_GAP]}
-            fontSize={0.2}
-            color={'#a7a7f2'}
-            anchorX="right"
-            anchorY="middle"
-          >
-            {n}
-          </Text>
+          <group key={n} position={[0, 0, i * Z_GAP]}>
+
+            {/* Vertical Bar */}
+            <mesh position={[X, Y * 0.5, 0]}>
+              <boxGeometry args={[0.014, Y, 0.014]} />
+              <meshBasicMaterial
+                color="#7d82ff"
+                transparent
+                opacity={0.55}
+                toneMapped={false}
+                depthWrite={false}
+              />
+            </mesh>
+
+            {/* Horizontal Bar */}
+            <mesh position={[hBarX, Y - .01, 0]}>
+              <boxGeometry args={[hBarLen, 0.016, 0.016]} />
+              <meshBasicMaterial
+                color="#7d82ff"
+                transparent
+                opacity={0.55}
+                toneMapped={false}
+                depthWrite={false}
+              />
+            </mesh>
+
+            <Text
+              position={[hBarLen + X, Y, 0]}
+              fontSize={0.2}
+              color="#ffffff"
+              anchorX="left"
+              anchorY="middle"
+              outlineColor={'black'}
+              outlineWidth={.005}
+            >
+              {n}
+            </Text>
+          </group>
         );
       })}
     </group>
@@ -199,6 +244,31 @@ function CameraRig({
     c.object.position.x += dx;
     c.update();
   });
+
+  return null;
+}
+
+function SceneBackdrop() {
+  const { scene } = useThree();
+  const texture = useMemo(() => makeBackdropTexture(), []);
+
+  useEffect(() => {
+    const prevBackground = scene.background;
+    const prevFog = scene.fog;
+
+    if (texture) {
+      scene.background = texture;
+    }
+    scene.fog = new THREE.Fog('#090815', 12, 42);
+
+    return () => {
+      scene.background = prevBackground;
+      scene.fog = prevFog;
+      if (texture?.isTexture) {
+        texture.dispose();
+      }
+    };
+  }, [scene, texture]);
 
   return null;
 }
@@ -274,7 +344,7 @@ export const Spectrogram: React.FC<ComponentProps> = ({ data, audioRef }) => {
     <div style={S.root}>
       <div style={S.canvasWrap}>
         <Canvas
-          style={{ position: 'absolute', inset: 0, backgroundColor: BG }}
+          style={{ position: 'absolute', inset: 0 }}
           dpr={[1, 2]}
           camera={{
             position: [AHEAD + CAM_DX, CAM_DY, midZ + CAM_DZ],
@@ -283,8 +353,8 @@ export const Spectrogram: React.FC<ComponentProps> = ({ data, audioRef }) => {
             far: 250,
           }}
         >
+          <SceneBackdrop />
           <FrequencyLines specData={spec} fps={fps} />
-          <Playhead audioRef={audioRef} />
           <NoteLabels audioRef={audioRef} />
           <Bars specData={data.spectrogram_data} fps={fps} />
 

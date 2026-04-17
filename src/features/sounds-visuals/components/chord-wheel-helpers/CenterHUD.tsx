@@ -64,7 +64,7 @@ export const CenterHUD = ({ overlay, radius, flag }: { overlay: OverlayState; ra
         />
       </mesh>
 
-      {/* 3. Main Chord Text (Large, Glowing) */}
+      {/* Main Chord Text (Large, Glowing) */}
       <group position={[0, 0.1, (baseHeight + .04)]} ref={text3DRef}>
         <Text3D
           font="https://threejs.org/examples/fonts/helvetiker_regular.typeface.json"
@@ -92,12 +92,12 @@ export const CenterHUD = ({ overlay, radius, flag }: { overlay: OverlayState; ra
         </Text3D>
       </group>
 
-      {/* 4. Associated stats (varies on where it's called from) */}
+      {/* Associated stats (varies on where it's called from) */}
       <group position={[0, -0.25, (baseHeight + .05)]}>
         {/* Row 1: Time & Percent */}
         <Text
           font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hjp-Ek-_EeA.woff"
-          fontSize={0.13}
+          fontSize={0.18}
           color={'#e1d4d4'}
           anchorX="center"
           anchorY="top"
@@ -110,7 +110,7 @@ export const CenterHUD = ({ overlay, radius, flag }: { overlay: OverlayState; ra
         {/* Row 2: Count label */}
         <Text
           font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hjp-Ek-_EeA.woff"
-          fontSize={0.12}
+          fontSize={0.16}
           color="#4e4d4d"
           anchorX="center"
           anchorY="top"

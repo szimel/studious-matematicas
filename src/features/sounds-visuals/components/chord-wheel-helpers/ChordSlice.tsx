@@ -170,7 +170,7 @@ export function ChordSlice({
   const makeOverlay = useCallback(() => ({
     display: slice.name,
     count: slice.count,
-    pct: slice.count > 0 ? (slice.pct * 100).toFixed(2) + '%' : '0%',
+    pct: slice.count > 0 ? (slice.pct * 100).toFixed(1) + '%' : '0%',
     seconds: slice.count > 0 ? slice.seconds.toFixed(1) + 's' : '0s',
     color: baseColor.clone(),
   }), [dataMap, baseColor]);
@@ -209,6 +209,8 @@ export function ChordSlice({
         geometry={geometry}
         onPointerDown={onSelect}
         onPointerEnter={onHover}
+        castShadow
+        receiveShadow
       >
         <meshPhysicalMaterial
           color={darkBase}

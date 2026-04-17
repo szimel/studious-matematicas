@@ -32,11 +32,6 @@ export const ChordWedge = ({ dataMap }: {
 
   return (
     <>
-      {/* Lights – cooler tones to let rainbow hues shine */}
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 6, 4]} intensity={0.6} castShadow shadow-mapSize={[2048, 2048]} />
-      <directionalLight position={[-4, 3, -2]} intensity={0.3} />
-
       {/* OUTER (maj) wedges: rMid -> rOuter */}
       {OUTER.map((d, index) => (
         <ChordSlice
