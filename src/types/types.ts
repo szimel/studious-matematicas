@@ -5,8 +5,8 @@ import { Spectrogram } from '../features/sounds-visuals/components/Spectrogram';
 import FingerprintSculpture from '../features/sounds-visuals/components/Fingerprint';
 
 export interface ComponentProps {
-	data: SherlockReport,
-	audioRef: React.RefObject<HTMLAudioElement>;
+  data: SherlockReport,
+  audioRef: React.RefObject<HTMLAudioElement>;
 }
 
 interface VisualizerModule {
@@ -72,5 +72,18 @@ export const demoSongs: Record<string, { label: string; file: string }[]> = {
     { label: 'Blackbird', file: '/audio/blackbird.mp3' },
     { label: 'Song of Storms', file: '/audio/song_of_storms.mp3' },
     { label: 'Fabulous Kisses', file: '/audio/fabulous_kisses.mp3' },
+  ],
+  'Maria': [
+    { label: 'Midnight Sun', file: '/audio/Maria-midnight_sun.mp3' },
+    { label: 'Mountain Peaks', file: '/audio/Maria-mountain_peaks.mp3' },
+    { label: 'Season 2 Weight Loss', file: '/audio/Maria-season_2_weight_loss.mp3' }
+  ], 
+  'Joel': [
+    { label: 'INTERNET YAMERO', file: '/audio/Joel-INTERNET_YAMERO.mp3' },
+    { label: 'Rise and Shine', file: '/audio/Joel-rise_and_shine.mp3' },
+  ],
+  'Pop': [
+    { label: 'Mary Jane Last Dance', file: '/audio/Pop-mary_jane_last_dance.mp3' },
+    { label: 'Dani California', file: '/audio/Isaac-dani_california.mp3' },
   ]
 };

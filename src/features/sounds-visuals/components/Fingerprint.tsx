@@ -39,13 +39,13 @@ const NOTE_SET = new Set<string>(NOTES);
 // Set tuning of model params here
 const FINGERPRINT_TUNING = {
   global: {
-    chordIntensityGain: 1.36,
-    noteIntensityGain: 1.42,
-    pairIntensityGain: 1.4,
-    ambientIntensityGain: 1.16,
-    deformationGain: 1.34,
-    extrudeProbabilityGain: 1.34,
-    extrudeDistanceGain: 2.3,
+    chordIntensityGain: 1.66,
+    noteIntensityGain: 1.62,
+    pairIntensityGain: 1.6,
+    ambientIntensityGain: 1.36,
+    deformationGain: 1.64,
+    extrudeProbabilityGain: 1.64,
+    extrudeDistanceGain: 3,
     colorBlendGain: 3.5,
     colorSaturationGain: 2.5,
     colorLightnessGain: 1,
