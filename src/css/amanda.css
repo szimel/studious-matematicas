@@ -1,0 +1,336 @@
+.amanda-root {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 15%, rgba(255, 156, 108, 0.25), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(170, 221, 255, 0.18), transparent 25%),
+    linear-gradient(140deg, #1f2f3c 0%, #162530 45%, #4f3434 100%);
+  border: 1px solid rgba(255, 223, 166, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(255, 241, 211, 0.08), 0 14px 35px rgba(8, 13, 18, 0.45);
+  gap: 16px;
+}
+
+.amanda-postcard {
+  position: absolute;
+  inset: 16px;
+  border: 1px dashed rgba(255, 225, 174, 0.36);
+  border-radius: 14px;
+  pointer-events: none;
+}
+
+.amanda-input-panel,
+.amanda-results-panel {
+  position: relative;
+  z-index: 1;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 235, 194, 0.45);
+  background: rgba(12, 20, 29, 0.72);
+  padding: 22px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+}
+
+.amanda-theme-banner {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.amanda-badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 228, 187, 0.6);
+  background: rgba(243, 184, 126, 0.16);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffe5bf;
+}
+
+.amanda-motifs-row {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin-bottom: 16px;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(255, 222, 173, 0.28);
+}
+
+.amanda-motif-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.amanda-motif-item span {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: #ffdcb0;
+  opacity: 0.9;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.amanda-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.amanda-title {
+  color: #ffefcf;
+  margin: 0;
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+
+.amanda-subtitle {
+  margin-top: 12px;
+  margin-bottom: 18px;
+  color: #d8e4f0;
+  line-height: 1.6;
+  max-width: 760px;
+}
+
+.amanda-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.amanda-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #ebf3ff;
+  font-size: 0.9rem;
+}
+
+.amanda-field input {
+  background: rgba(16, 29, 41, 0.85);
+  border: 1px solid rgba(181, 216, 255, 0.4);
+  border-radius: 10px;
+  color: #f6fbff;
+  padding: 12px;
+  font-size: 1rem;
+}
+
+.amanda-field input::-webkit-outer-spin-button,
+.amanda-field input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.amanda-field input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.amanda-field input:focus {
+  outline: none;
+  border-color: #ffb075;
+  box-shadow: 0 0 0 2px rgba(255, 176, 117, 0.25);
+}
+
+.amanda-cta-row {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.amanda-calc-button,
+.amanda-back-button {
+  border: 1px solid rgba(255, 231, 184, 0.7);
+  background: linear-gradient(160deg, #ff895d, #e85042);
+  color: #fff7ed;
+  border-radius: 12px;
+  padding: 11px 18px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.amanda-calc-button:hover,
+.amanda-back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(232, 80, 66, 0.35);
+}
+
+.amanda-helper-copy {
+  color: #bfd5ea;
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.amanda-error {
+  margin-top: 16px;
+  margin-bottom: 0;
+  color: #ffd0cb;
+  background: rgba(120, 33, 27, 0.45);
+  border: 1px solid rgba(255, 146, 132, 0.5);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.amanda-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.amanda-results-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.amanda-results-kicker {
+  margin: 0;
+  color: #99b7c9;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.74rem;
+}
+
+.amanda-results-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #ffefcf;
+  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+}
+
+.amanda-summary-band {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.amanda-stat-card {
+  border: 1px solid rgba(255, 227, 178, 0.38);
+  border-radius: 12px;
+  padding: 14px;
+  background: linear-gradient(150deg, rgba(255, 205, 141, 0.17), rgba(82, 131, 169, 0.12));
+}
+
+.amanda-stat-icon {
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: center;
+}
+
+.amanda-stat-card p {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #d9e9f7;
+  font-size: 0.85rem;
+}
+
+.amanda-stat-card strong {
+  display: block;
+  color: #fff3d5;
+  font-size: 1.2rem;
+}
+
+.amanda-stat-card small {
+  display: block;
+  color: #bdd3e8;
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+
+.amanda-chart-panel {
+  margin-top: 18px;
+  border: 1px solid rgba(168, 216, 255, 0.38);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(6, 14, 20, 0.7);
+}
+
+.amanda-chart-d3-wrap {
+  width: 100%;
+  background: rgba(6, 14, 20, 0.7);
+  padding: 8px 0 4px;
+}
+
+.amanda-detail-grid {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.amanda-detail-card {
+  border: 1px solid rgba(159, 203, 238, 0.45);
+  border-radius: 12px;
+  background: rgba(8, 23, 35, 0.72);
+  padding: 14px;
+  color: #dbe9f4;
+}
+
+.amanda-detail-card-accent {
+  border-color: rgba(152, 245, 196, 0.5);
+  background: rgba(9, 32, 29, 0.65);
+}
+
+.amanda-detail-card h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #fff0cb;
+}
+
+.amanda-detail-card p {
+  margin: 8px 0;
+}
+
+@media (max-width: 980px) {
+  .amanda-input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .amanda-summary-band {
+    grid-template-columns: 1fr;
+  }
+
+  .amanda-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .amanda-chart-d3-wrap {
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .amanda-input-panel,
+  .amanda-results-panel {
+    padding: 14px;
+  }
+
+  .amanda-title {
+    letter-spacing: 0.01em;
+  }
+
+  .amanda-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .amanda-calc-button,
+  .amanda-back-button {
+    width: 100%;
+  }
+
+  .amanda-chart-d3-wrap {
+    min-height: 170px;
+  }
+}

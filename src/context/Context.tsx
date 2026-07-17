@@ -74,6 +74,10 @@ export interface SideBarProps {
 
 export const items: SideBarItem[] = [
   {
+    link: '/amanda',
+    text: 'Amanda'
+  },
+  {
     link: '/seeing-sounds',
     text: 'Sounds Visualized'
   },
