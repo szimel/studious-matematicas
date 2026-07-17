@@ -10,6 +10,7 @@ import { KamTest } from '../pages/Kamkam';
 import { TaeExample } from '../pages/matea/[id]';
 import { SeeingSounds } from '../pages/seeing-sounds/SeeingSounds';
 import { SeeingSoundsAnalysis } from '../pages/seeing-sounds/Analysis';
+import { Amanda } from '../pages/amanda/Amanda';
 
 const AppRoutes: React.FC = () => (
   <div className="routes-container">
@@ -29,6 +30,7 @@ const AppRoutes: React.FC = () => (
             } />
             <Route path="/seeing-sounds" element={<AnimatedRoute><SeeingSounds /></AnimatedRoute>} />
             <Route path="/seeing-sounds/analysis" element={<AnimatedRoute><SeeingSoundsAnalysis /></AnimatedRoute>} />
+            <Route path="/amanda" element={<AnimatedRoute><Amanda /></AnimatedRoute>} />
           </Routes>
           {/* </AnimatePresence> */}
         </div>
